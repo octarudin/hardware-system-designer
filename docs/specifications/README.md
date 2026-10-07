@@ -6,6 +6,7 @@ Current documents:
 
 - `engineering-specification-v1.md`
 - `component-schema-v1.md`
+- `port-interface-schema-v1.md`
 
 Planned:
 

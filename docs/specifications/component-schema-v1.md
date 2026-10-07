@@ -1,11 +1,17 @@
 # Component Schema V1
 ## Hardware System Designer
 
-**Document Version:** 1.0  
-**Status:** Baseline Specification  
-**Target Release:** V1  
-**Schema Identifier:** `hwsd.component/1`  
+**Document Version:** 1.0
+
+**Status:** Baseline Specification
+
+**Target Release:** V1
+
+**Schema Identifier:** `hwsd.component/1`
+
 **Normative Machine-Readable Schema:** `../schemas/component-schema-v1.schema.json`
+
+**Related Specification:** `port-interface-schema-v1.md`
 
 ---
 
@@ -255,6 +261,8 @@ Functions sharing the same non-empty `mux_group` are mutually exclusive on one c
 ## 9. Port Model
 
 A port is an endpoint exposed to the block-diagram connection system. A port is not the same as a physical pin or internal resource.
+
+The detailed port, interface, binding, and power contract is defined by Port/Interface Schema V1. Component Schema V1 references that machine-readable definition directly so both standalone and embedded ports use one canonical structure.
 
 Each port contains:
 

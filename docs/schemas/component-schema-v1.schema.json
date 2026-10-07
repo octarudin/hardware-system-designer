@@ -36,7 +36,9 @@
     },
     "ports": {
       "type": "array",
-      "items": { "$ref": "#/$defs/port" }
+      "items": {
+        "$ref": "port-interface-schema-v1.schema.json#/$defs/port"
+      }
     },
     "resources": {
       "type": "array",
@@ -91,15 +93,6 @@
       "properties": {
         "value": { "$ref": "#/$defs/nonNegativeNumber" },
         "unit": { "const": "A" }
-      }
-    },
-    "frequency": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["value", "unit"],
-      "properties": {
-        "value": { "$ref": "#/$defs/nonNegativeNumber" },
-        "unit": { "const": "Hz" }
       }
     },
     "voltageRange": {
@@ -289,7 +282,9 @@
       "required": ["function_id", "interface_type", "signal"],
       "properties": {
         "function_id": { "$ref": "#/$defs/localId" },
-        "interface_type": { "$ref": "#/$defs/interfaceType" },
+        "interface_type": {
+          "$ref": "port-interface-schema-v1.schema.json#/$defs/interfaceType"
+        },
         "signal": { "$ref": "#/$defs/nonEmptyString" },
         "resource_id": { "$ref": "#/$defs/localId" },
         "channel": { "$ref": "#/$defs/nonEmptyString" },
@@ -336,125 +331,6 @@
           "type": "array",
           "items": { "$ref": "#/$defs/alternateFunction" }
         }
-      }
-    },
-    "interfaceType": {
-      "enum": [
-        "GPIO_INPUT",
-        "GPIO_OUTPUT",
-        "GPIO_BIDIRECTIONAL",
-        "PWM",
-        "INTERRUPT",
-        "DIGITAL_CUSTOM",
-        "UART_TTL",
-        "RS232",
-        "RS485",
-        "CAN",
-        "LIN",
-        "I2C",
-        "SPI",
-        "ONE_WIRE",
-        "ANALOG_INPUT",
-        "ANALOG_OUTPUT",
-        "ADC_INPUT",
-        "DAC_OUTPUT",
-        "ANALOG_0_10V",
-        "ANALOG_4_20MA",
-        "ETHERNET",
-        "WIFI",
-        "BLE",
-        "GSM",
-        "LTE",
-        "LORA",
-        "RF_CUSTOM",
-        "DRY_CONTACT",
-        "RELAY_CONTACT",
-        "ENABLE",
-        "RESET",
-        "POWER_INPUT",
-        "POWER_OUTPUT",
-        "BATTERY_INPUT",
-        "BATTERY_OUTPUT",
-        "CHARGER_INPUT",
-        "CHARGER_OUTPUT",
-        "CUSTOM"
-      ]
-    },
-    "interface": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["type", "bus_mode"],
-      "properties": {
-        "type": { "$ref": "#/$defs/interfaceType" },
-        "custom_type": { "$ref": "#/$defs/nonEmptyString" },
-        "bus_mode": {
-          "enum": ["POINT_TO_POINT", "SHARED_BUS", "MULTI_DROP", "WIRELESS", "NOT_APPLICABLE"]
-        },
-        "logic_voltage": { "$ref": "#/$defs/voltageRange" },
-        "max_frequency": { "$ref": "#/$defs/frequency" },
-        "protocol": { "$ref": "#/$defs/nonEmptyString" }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "type": { "enum": ["CUSTOM", "DIGITAL_CUSTOM", "RF_CUSTOM"] }
-            },
-            "required": ["type"]
-          },
-          "then": { "required": ["custom_type"] },
-          "else": { "not": { "required": ["custom_type"] } }
-        }
-      ]
-    },
-    "binding": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "pin_id": { "$ref": "#/$defs/localId" },
-        "function_id": { "$ref": "#/$defs/localId" },
-        "resource_id": { "$ref": "#/$defs/localId" },
-        "channel": { "$ref": "#/$defs/nonEmptyString" }
-      },
-      "anyOf": [
-        { "required": ["pin_id"] },
-        { "required": ["resource_id"] }
-      ]
-    },
-    "power": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["role"],
-      "properties": {
-        "role": { "enum": ["SOURCE", "LOAD", "BIDIRECTIONAL"] },
-        "voltage": { "$ref": "#/$defs/voltageRange" },
-        "typical_current": { "$ref": "#/$defs/current" },
-        "max_current": { "$ref": "#/$defs/current" },
-        "peak_current": { "$ref": "#/$defs/current" },
-        "regulation": {
-          "enum": ["REGULATED", "UNREGULATED", "BATTERY", "UNKNOWN"]
-        },
-        "polarity": {
-          "enum": ["POSITIVE", "NEGATIVE", "AC", "NOT_APPLICABLE"]
-        }
-      }
-    },
-    "port": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["port_id", "name", "requirement", "direction", "interface", "bindings"],
-      "properties": {
-        "port_id": { "$ref": "#/$defs/localId" },
-        "name": { "$ref": "#/$defs/nonEmptyString" },
-        "requirement": { "$ref": "#/$defs/requirement" },
-        "direction": { "enum": ["INPUT", "OUTPUT", "BIDIRECTIONAL", "PASSIVE"] },
-        "interface": { "$ref": "#/$defs/interface" },
-        "bindings": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/binding" }
-        },
-        "power": { "$ref": "#/$defs/power" },
-        "description": { "$ref": "#/$defs/nonEmptyString" }
       }
     },
     "resourceType": {

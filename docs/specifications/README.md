@@ -9,3 +9,4 @@ Current documents:
 - `port-interface-schema-v1.md`
 - `connection-rule-specification-v1.md`
 - `project-file-specification-v1.md`
+- `database-schema-v1.md`

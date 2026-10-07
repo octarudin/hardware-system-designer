@@ -4,7 +4,7 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-Project planning and specification phase.
+V1 implementation-planning phase. Engineering, data, database, and UI/UX baselines are established; application coding has not started.
 
 ## Repository Structure
 

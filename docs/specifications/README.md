@@ -8,7 +8,4 @@ Current documents:
 - `component-schema-v1.md`
 - `port-interface-schema-v1.md`
 - `connection-rule-specification-v1.md`
-
-Planned:
-
 - `project-file-specification-v1.md`

@@ -1,0 +1,444 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hardware-system-designer.local/schemas/project-file-v1.schema.json",
+  "title": "Hardware System Designer Project File V1",
+  "description": "Canonical server, recovery, and local export representation for a V1 hardware design project.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ruleset_version",
+    "project_id",
+    "document_revision",
+    "engineering_revision",
+    "metadata",
+    "settings",
+    "canvas",
+    "component_instances",
+    "connections",
+    "allocations",
+    "engineering_notes",
+    "warning_overrides"
+  ],
+  "properties": {
+    "schema_version": { "const": "hwsd.project/1" },
+    "ruleset_version": { "const": "hwsd.connection-rules/1" },
+    "project_id": { "$ref": "#/$defs/projectId" },
+    "document_revision": { "type": "integer", "minimum": 1 },
+    "engineering_revision": { "type": "integer", "minimum": 1 },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "settings": { "$ref": "#/$defs/settings" },
+    "canvas": { "$ref": "#/$defs/canvas" },
+    "component_instances": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/componentInstance" }
+    },
+    "connections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/connection" }
+    },
+    "allocations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/allocation" }
+    },
+    "engineering_notes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/engineeringNote" }
+    },
+    "warning_overrides": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/warningOverride" }
+    },
+    "last_design_check": { "$ref": "#/$defs/designCheck" }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "entityId": {
+      "type": "string",
+      "pattern": "^[A-Z]+-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "projectId": {
+      "type": "string",
+      "pattern": "^PROJ-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "instanceId": {
+      "type": "string",
+      "pattern": "^INST-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "connectionId": {
+      "type": "string",
+      "pattern": "^CONN-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "endpointId": {
+      "type": "string",
+      "pattern": "^ENDP-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "allocationId": {
+      "type": "string",
+      "pattern": "^ALLOC-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "noteId": {
+      "type": "string",
+      "pattern": "^NOTE-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "overrideId": {
+      "type": "string",
+      "pattern": "^OVERRIDE-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "userId": {
+      "type": "string",
+      "pattern": "^USR-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "localId": {
+      "type": "string",
+      "pattern": "^[A-Z]+-[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "owner_user_id", "created_at", "updated_at"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "owner_user_id": { "$ref": "#/$defs/userId" },
+        "created_at": { "$ref": "#/$defs/timestamp" },
+        "updated_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "autosave": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "interval_ms"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "interval_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 60000,
+          "default": 3000
+        },
+        "last_saved_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["autosave"],
+      "properties": {
+        "autosave": { "$ref": "#/$defs/autosave" }
+      }
+    },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "zoom"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "zoom": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["size", "snap_to_grid"],
+      "properties": {
+        "size": { "type": "number", "exclusiveMinimum": 0 },
+        "snap_to_grid": { "type": "boolean" }
+      }
+    },
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["viewport", "grid"],
+      "properties": {
+        "viewport": { "$ref": "#/$defs/viewport" },
+        "grid": { "$ref": "#/$defs/grid" }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "z_index": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "componentInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instance_id", "layout", "component_snapshot"],
+      "properties": {
+        "instance_id": { "$ref": "#/$defs/instanceId" },
+        "display_name": { "$ref": "#/$defs/nonEmptyString" },
+        "layout": { "$ref": "#/$defs/layout" },
+        "component_snapshot": {
+          "$ref": "component-schema-v1.schema.json"
+        }
+      }
+    },
+    "frequency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "const": "Hz" }
+      }
+    },
+    "serialSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baud_rate", "data_bits", "parity", "stop_bits"],
+      "properties": {
+        "baud_rate": { "type": "integer", "minimum": 1 },
+        "data_bits": { "type": "integer", "minimum": 5, "maximum": 9 },
+        "parity": { "enum": ["NONE", "EVEN", "ODD"] },
+        "stop_bits": { "enum": [1, 1.5, 2] }
+      }
+    },
+    "addressSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["address_id", "value"],
+      "properties": {
+        "address_id": { "$ref": "#/$defs/localId" },
+        "value": { "type": "integer", "minimum": 0, "maximum": 1023 }
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "endpoint_id",
+        "component_instance_id",
+        "port_id",
+        "selected_mapping_ids",
+        "address_selections"
+      ],
+      "properties": {
+        "endpoint_id": { "$ref": "#/$defs/endpointId" },
+        "component_instance_id": { "$ref": "#/$defs/instanceId" },
+        "port_id": {
+          "type": "string",
+          "pattern": "^PORT-[A-Z0-9][A-Z0-9_-]*$"
+        },
+        "selected_mapping_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^MAP-[A-Z0-9][A-Z0-9_-]*$"
+          }
+        },
+        "address_selections": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/addressSelection" }
+        }
+      }
+    },
+    "connectionVisual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["routing", "waypoints"],
+      "properties": {
+        "routing": { "enum": ["AUTO", "MANUAL"] },
+        "waypoints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/point" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "routing": { "const": "MANUAL" } },
+            "required": ["routing"]
+          },
+          "then": {
+            "properties": { "waypoints": { "minItems": 1 } }
+          }
+        }
+      ]
+    },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connection_id", "topology", "endpoints", "visual"],
+      "properties": {
+        "connection_id": { "$ref": "#/$defs/connectionId" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "topology": {
+          "enum": ["POINT_TO_POINT", "SHARED_BUS", "MULTI_DROP", "WIRELESS", "NOT_APPLICABLE"]
+        },
+        "endpoints": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/endpoint" }
+        },
+        "operating_frequency": { "$ref": "#/$defs/frequency" },
+        "serial_settings": { "$ref": "#/$defs/serialSettings" },
+        "visual": { "$ref": "#/$defs/connectionVisual" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "topology": { "enum": ["POINT_TO_POINT", "NOT_APPLICABLE"] }
+            },
+            "required": ["topology"]
+          },
+          "then": {
+            "properties": { "endpoints": { "minItems": 2, "maxItems": 2 } }
+          }
+        }
+      ]
+    },
+    "allocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allocation_id",
+        "connection_id",
+        "endpoint_id",
+        "component_instance_id",
+        "resource_kind",
+        "resource_id",
+        "allocation_mode"
+      ],
+      "properties": {
+        "allocation_id": { "$ref": "#/$defs/allocationId" },
+        "connection_id": { "$ref": "#/$defs/connectionId" },
+        "endpoint_id": { "$ref": "#/$defs/endpointId" },
+        "component_instance_id": { "$ref": "#/$defs/instanceId" },
+        "resource_kind": {
+          "enum": ["PIN", "FUNCTION", "RESOURCE", "CHANNEL"]
+        },
+        "resource_id": { "$ref": "#/$defs/localId" },
+        "channel": { "$ref": "#/$defs/nonEmptyString" },
+        "allocation_mode": { "enum": ["EXCLUSIVE", "SHARED"] }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "resource_kind": { "const": "CHANNEL" } },
+            "required": ["resource_kind"]
+          },
+          "then": { "required": ["channel"] },
+          "else": { "not": { "required": ["channel"] } }
+        }
+      ]
+    },
+    "engineeringNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["note_id", "scope", "text", "created_by", "created_at", "updated_at"],
+      "properties": {
+        "note_id": { "$ref": "#/$defs/noteId" },
+        "scope": {
+          "enum": ["PROJECT", "COMPONENT_INSTANCE", "CONNECTION", "ALLOCATION"]
+        },
+        "target_id": { "$ref": "#/$defs/entityId" },
+        "text": { "$ref": "#/$defs/nonEmptyString" },
+        "created_by": { "$ref": "#/$defs/userId" },
+        "created_at": { "$ref": "#/$defs/timestamp" },
+        "updated_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "scope": { "const": "PROJECT" } },
+            "required": ["scope"]
+          },
+          "then": { "not": { "required": ["target_id"] } },
+          "else": { "required": ["target_id"] }
+        }
+      ]
+    },
+    "evaluationSubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "project_id": { "$ref": "#/$defs/projectId" },
+        "connection_id": { "$ref": "#/$defs/connectionId" },
+        "component_instance_id": { "$ref": "#/$defs/instanceId" },
+        "bus_id": { "$ref": "#/$defs/entityId" }
+      }
+    },
+    "warningOverride": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "override_id",
+        "ruleset_version",
+        "rule_id",
+        "code",
+        "message",
+        "fingerprint",
+        "subject",
+        "confirmed_by",
+        "confirmed_at"
+      ],
+      "properties": {
+        "override_id": { "$ref": "#/$defs/overrideId" },
+        "ruleset_version": { "const": "hwsd.connection-rules/1" },
+        "rule_id": {
+          "type": "string",
+          "pattern": "^[A-Z]+-[0-9]{3}$"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "message": { "$ref": "#/$defs/nonEmptyString" },
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "subject": { "$ref": "#/$defs/evaluationSubject" },
+        "confirmed_by": { "$ref": "#/$defs/userId" },
+        "confirmed_at": { "$ref": "#/$defs/timestamp" },
+        "engineering_note": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "designCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluated_engineering_revision", "evaluated_at", "result"],
+      "properties": {
+        "evaluated_engineering_revision": { "type": "integer", "minimum": 1 },
+        "evaluated_at": { "$ref": "#/$defs/timestamp" },
+        "result": {
+          "allOf": [
+            { "$ref": "connection-rule-result-v1.schema.json" },
+            {
+              "type": "object",
+              "properties": { "mode": { "const": "DESIGN_CHECK" } },
+              "required": ["mode"]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

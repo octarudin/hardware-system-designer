@@ -125,6 +125,9 @@
     "busMode": {
       "enum": ["POINT_TO_POINT", "SHARED_BUS", "MULTI_DROP", "WIRELESS", "NOT_APPLICABLE"]
     },
+    "busRole": {
+      "enum": ["CONTROLLER", "TARGET", "PEER"]
+    },
     "interface": {
       "type": "object",
       "additionalProperties": false,
@@ -139,6 +142,7 @@
         "interface_id": { "$ref": "#/$defs/interfaceId" },
         "interface_revision": { "type": "integer", "minimum": 1 },
         "bus_mode": { "$ref": "#/$defs/busMode" },
+        "bus_role": { "$ref": "#/$defs/busRole" },
         "logic_voltage": { "$ref": "#/$defs/voltageRange" },
         "signal_voltage": { "$ref": "#/$defs/voltageRange" },
         "signal_current": { "$ref": "#/$defs/currentRange" },

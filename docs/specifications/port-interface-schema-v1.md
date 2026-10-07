@@ -138,6 +138,7 @@ An interface describes what a port exposes. Its core fields are:
 |---|---:|---|
 | `type` | yes | Canonical V1 interface type. |
 | `bus_mode` | yes | Connection topology. |
+| `bus_role` | conditional | `CONTROLLER`, `TARGET`, or `PEER` for bus-aware interfaces. |
 | `custom_type` | conditional | Required for custom interface families. |
 | `interface_id` | no | Stable reusable custom-profile identity. |
 | `interface_revision` | conditional | Revision paired with `interface_id`. |
@@ -248,6 +249,16 @@ Canonical defaults are:
 
 The machine schema accepts all bus-mode values because uncommon but valid hardware topologies exist. The semantic validator shall compare the declared mode with this table and require explicit review for a non-canonical combination.
 
+### 7.1 Bus Role
+
+`bus_role` expresses the endpoint's role without relying on component category or display name:
+
+- `CONTROLLER`: initiates or controls bus transactions.
+- `TARGET`: responds to a controller.
+- `PEER`: participates without a controller/target distinction at the modeled layer.
+
+I2C, SPI, and 1-Wire ports shall declare `CONTROLLER` or `TARGET`. RS-485 and LIN ports use controller/target roles when their protocol defines them, otherwise `PEER`. CAN ports normally use `PEER`. Non-bus interfaces omit `bus_role`.
+
 ---
 
 ## 8. Electrical Capabilities
@@ -328,6 +339,7 @@ Example I2C controller port:
   "interface": {
     "type": "I2C",
     "bus_mode": "SHARED_BUS",
+    "bus_role": "CONTROLLER",
     "logic_voltage": {
       "nominal": { "value": 3.3, "unit": "V" }
     },

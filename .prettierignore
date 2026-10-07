@@ -1,0 +1,12 @@
+.git
+.pnpm-store
+node_modules
+dist
+build
+coverage
+docs/specifications
+docs/schemas
+docs/architecture
+docs/ui-ux/screen-flow-v1.md
+database/migrations
+pnpm-lock.yaml

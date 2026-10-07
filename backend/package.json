@@ -1,0 +1,22 @@
+{
+  "name": "@hwsd/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "node --watch --enable-source-maps --import=tsx src/server.ts",
+    "start": "node --enable-source-maps dist/server.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@hwsd/rule-engine": "workspace:*",
+    "@hwsd/shared": "workspace:*",
+    "fastify": "5.12.5"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "4.23.15",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./shared" },
+    { "path": "./rule-engine" },
+    { "path": "./backend" },
+    { "path": "./ai" },
+    { "path": "./frontend" }
+  ]
+}

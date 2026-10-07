@@ -1,0 +1,40 @@
+{
+  "name": "hardware-system-designer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Engineering-aware hardware system block diagram designer",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": ">=24.12.0 <25",
+    "pnpm": "12.9.1"
+  },
+  "scripts": {
+    "build": "corepack pnpm -r --if-present build",
+    "dev": "corepack pnpm --parallel --filter @hwsd/frontend --filter @hwsd/backend --filter @hwsd/ai dev",
+    "format": "prettier --write . --ignore-unknown",
+    "format:check": "prettier --check . --ignore-unknown",
+    "lint": "eslint .",
+    "typecheck": "corepack pnpm -r --if-present typecheck",
+    "test": "vitest run",
+    "test:schema": "vitest run tests/schema-assets.test.ts",
+    "test:e2e": "playwright test",
+    "db:migrate:smoke": "node scripts/migration-smoke.mjs",
+    "infra:up": "docker compose up -d postgres minio",
+    "infra:down": "docker compose down",
+    "verify": "corepack pnpm format:check && corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test:schema && corepack pnpm test && corepack pnpm build"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.19.1",
+    "@types/pg": "8.23.1",
+    "eslint": "10.12.0",
+    "pg": "8.23.1",
+    "prettier": "3.9.9",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.1",
+    "vitest": "5.0.3"
+  }
+}

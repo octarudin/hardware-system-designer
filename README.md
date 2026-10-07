@@ -4,7 +4,38 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-V1 implementation-planning phase. Engineering, data, database, and UI/UX baselines are established; application coding has not started.
+M0 implementation foundation. The V1 specifications, executable implementation plan, architecture decisions, workspace, runtime skeletons, local infrastructure definition, and CI baseline are established. Product-feature implementation starts in M1.
+
+## Prerequisites
+
+- Node.js 24 LTS
+- Corepack
+- Docker with Compose for PostgreSQL and object-storage services
+
+The project pins pnpm through the root `packageManager` field; a global pnpm installation is not required.
+
+## Quick Start
+
+```text
+corepack pnpm install --frozen-lockfile
+Copy-Item .env.example .env
+corepack pnpm infra:up
+corepack pnpm dev
+```
+
+On non-PowerShell shells, copy `.env.example` to `.env` with the equivalent local command. The web shell is served at `http://127.0.0.1:5173`, the API at `http://127.0.0.1:3000`, and the MinIO console at `http://127.0.0.1:9001`.
+
+Run the complete non-container verification gate with:
+
+```text
+corepack pnpm verify
+```
+
+With PostgreSQL running and `DATABASE_URL` loaded from `.env`, verify the initial migration with:
+
+```text
+corepack pnpm db:migrate:smoke
+```
 
 ## Repository Structure
 
@@ -17,6 +48,16 @@ V1 implementation-planning phase. Engineering, data, database, and UI/UX baselin
 - `shared/` — shared types, constants, and utilities.
 - `tests/` — automated and integration tests.
 - `scripts/` — development, maintenance, and utility scripts.
+
+## Architecture Boundaries
+
+- `shared` has no dependency on application packages.
+- `rule-engine` is pure and depends only on `shared`.
+- `backend` owns synchronous authorization, application commands, and transactions.
+- `ai` is a separate worker process and has no engineering-decision authority.
+- `frontend` may preview engineering behavior, but the backend always revalidates persistent changes.
+
+See `docs/architecture/implementation-plan-v1.md` and `docs/decisions/` for the normative implementation baseline.
 
 ## V1 Focus
 

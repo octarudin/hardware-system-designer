@@ -1,0 +1,34 @@
+name: hardware-system-designer
+
+services:
+  postgres:
+    image: postgres:16.15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-hardware_system_designer}
+      POSTGRES_USER: ${POSTGRES_USER:-hwsd}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hwsd_local_only}
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:RELEASE.2025-07-18T21-56-31Z
+    command: server /data --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-hwsd_local}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:-hwsd_local_only}
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio-data:/data
+
+volumes:
+  postgres-data:
+  minio-data:

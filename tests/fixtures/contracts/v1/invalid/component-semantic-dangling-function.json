@@ -1,0 +1,36 @@
+{
+  "schema_version": "hwsd.component/1",
+  "component_id": "CMP-INVALID-REFERENCE",
+  "revision": 1,
+  "identity": { "name": "Invalid reference" },
+  "classification": { "category": "CUSTOM_COMPONENT", "abstraction": "CUSTOM" },
+  "lifecycle": { "status": "REVIEW_REQUIRED" },
+  "provenance": { "origin": "MANUAL", "datasheets": [], "field_evidence": [] },
+  "pins": [
+    {
+      "pin_id": "PIN-1",
+      "number": "1",
+      "name": "GPIO",
+      "direction": "BIDIRECTIONAL",
+      "electrical_type": "DIGITAL",
+      "requirement": "OPTIONAL",
+      "alternate_functions": []
+    }
+  ],
+  "ports": [
+    {
+      "port_id": "PORT-GPIO",
+      "name": "GPIO",
+      "requirement": "OPTIONAL",
+      "direction": "BIDIRECTIONAL",
+      "interface": { "type": "GPIO_BIDIRECTIONAL", "bus_mode": "NOT_APPLICABLE" },
+      "bindings": [{ "pin_id": "PIN-1", "function_id": "FUNC-MISSING" }]
+    }
+  ],
+  "resources": [],
+  "address_capabilities": [],
+  "notes": [],
+  "created_at": "2026-01-01T00:00:00.000Z",
+  "updated_at": "2026-01-01T00:00:00.000Z",
+  "revision_notes": "Invalid semantic fixture"
+}

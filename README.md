@@ -4,7 +4,7 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-M0 implementation foundation. The V1 specifications, executable implementation plan, architecture decisions, workspace, runtime skeletons, local infrastructure definition, and CI baseline are established. Product-feature implementation starts in M1.
+M1 contract and validation foundation. All four V1 JSON Schemas execute from one browser-safe Ajv 2020 registry, derived TypeScript contracts are reproducible, semantic component/project validation is available without I/O, and the API exposes stable errors, request IDs, and OpenAPI.
 
 ## Prerequisites
 
@@ -30,6 +30,8 @@ Run the complete non-container verification gate with:
 ```text
 corepack pnpm verify
 ```
+
+After changing a canonical file in `docs/schemas`, regenerate and review the derived artifacts with `corepack pnpm contracts:generate`. CI rejects uncommitted generated drift.
 
 With PostgreSQL running and `DATABASE_URL` loaded from `.env`, verify the initial migration with:
 

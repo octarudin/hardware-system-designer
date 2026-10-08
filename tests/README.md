@@ -2,4 +2,4 @@
 
 Cross-package architecture, schema, integration, and end-to-end tests.
 
-Package-local unit tests live beside their source. The M0 root suites verify schema asset identities and the dependency rules from ADR-0002. Browser tests are configured but are not part of the M0 pull-request gate.
+Package-local unit tests live beside their source. Root suites verify schema asset identities and the dependency rules from ADR-0002. M1 canonical contract fixtures live in `fixtures/contracts/v1` and cover valid minimal/representative documents plus structural and semantic boundaries. Browser tests are configured separately from the pull-request gate.

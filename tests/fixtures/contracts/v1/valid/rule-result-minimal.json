@@ -1,0 +1,10 @@
+{
+  "ruleset_version": "hwsd.connection-rules/1",
+  "mode": "CONNECTION_PREVIEW",
+  "subject": { "project_id": "PROJ-MINIMAL" },
+  "verdict": "VALID",
+  "allowed": true,
+  "requires_confirmation": false,
+  "findings": [],
+  "allocation_effects": []
+}

@@ -34,4 +34,37 @@ describe('API skeleton', () => {
       },
     });
   });
+
+  it('generates OpenAPI for versioned product routes', async () => {
+    const app = buildApp();
+    apps.push(app);
+
+    const response = await app.inject({ method: 'GET', url: '/api/v1/openapi.json' });
+    const document = response.json<{ paths: Record<string, unknown> }>();
+
+    expect(response.statusCode).toBe(200);
+    expect(document.paths).toHaveProperty('/api/v1');
+  });
+
+  it('returns the standard error envelope with a request id', async () => {
+    const app = buildApp();
+    apps.push(app);
+
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/missing',
+      headers: { 'x-request-id': 'request-m1-test' },
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.headers['x-request-id']).toBe('request-m1-test');
+    expect(response.json()).toEqual({
+      error: {
+        code: 'ROUTE_NOT_FOUND',
+        message: 'The requested route does not exist.',
+        requestId: 'request-m1-test',
+        details: [],
+      },
+    });
+  });
 });

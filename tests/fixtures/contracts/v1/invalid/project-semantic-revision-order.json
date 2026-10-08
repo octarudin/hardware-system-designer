@@ -1,0 +1,23 @@
+{
+  "schema_version": "hwsd.project/1",
+  "ruleset_version": "hwsd.connection-rules/1",
+  "project_id": "PROJ-INVALID-REVISION",
+  "document_revision": 1,
+  "engineering_revision": 2,
+  "metadata": {
+    "name": "Invalid project revision",
+    "owner_user_id": "USR-OWNER",
+    "created_at": "2026-01-01T00:00:00.000Z",
+    "updated_at": "2026-01-01T00:00:00.000Z"
+  },
+  "settings": { "autosave": { "enabled": true, "interval_ms": 3000 } },
+  "canvas": {
+    "viewport": { "x": 0, "y": 0, "zoom": 1 },
+    "grid": { "size": 16, "snap_to_grid": true }
+  },
+  "component_instances": [],
+  "connections": [],
+  "allocations": [],
+  "engineering_notes": [],
+  "warning_overrides": []
+}

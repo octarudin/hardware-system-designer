@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@fastify/swagger": "9.9.1",
     "@hwsd/rule-engine": "workspace:*",
     "@hwsd/shared": "workspace:*",
     "fastify": "5.12.5"

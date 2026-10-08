@@ -7,6 +7,7 @@ export default tseslint.config(
       '**/dist/**',
       '**/coverage/**',
       '**/node_modules/**',
+      'shared/src/generated/**',
       'docs/**',
       'database/migrations/**',
     ],

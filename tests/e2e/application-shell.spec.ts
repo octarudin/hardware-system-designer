@@ -8,5 +8,5 @@ test('shows the implementation foundation without claiming feature completion', 
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
     'A dependable foundation for engineering decisions.',
   );
-  await expect(page.getByText('M0 · Architecture and bootstrap')).toBeVisible();
+  await expect(page.getByText('M1 · Contract and validation foundation')).toBeVisible();
 });

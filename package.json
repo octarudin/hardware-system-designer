@@ -12,6 +12,8 @@
   },
   "scripts": {
     "build": "corepack pnpm -r --if-present build",
+    "contracts:check": "node scripts/generate-contracts.mjs --check",
+    "contracts:generate": "node scripts/generate-contracts.mjs",
     "dev": "corepack pnpm --parallel --filter @hwsd/frontend --filter @hwsd/backend --filter @hwsd/ai dev",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
@@ -23,7 +25,7 @@
     "db:migrate:smoke": "node scripts/migration-smoke.mjs",
     "infra:up": "docker compose up -d postgres minio",
     "infra:down": "docker compose down",
-    "verify": "corepack pnpm format:check && corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test:schema && corepack pnpm test && corepack pnpm build"
+    "verify": "corepack pnpm contracts:check && corepack pnpm format:check && corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test:schema && corepack pnpm test && corepack pnpm build"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -31,6 +33,7 @@
     "@types/node": "24.19.1",
     "@types/pg": "8.23.1",
     "eslint": "10.12.0",
+    "json-schema-to-typescript": "16.0.0",
     "pg": "8.23.1",
     "prettier": "3.9.9",
     "typescript": "6.0.3",

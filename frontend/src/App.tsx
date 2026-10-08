@@ -22,7 +22,7 @@ export function App() {
 
       <section className="hero" aria-labelledby="page-title">
         <div>
-          <p className="eyebrow">M0 · Architecture and bootstrap</p>
+          <p className="eyebrow">M1 · Contract and validation foundation</p>
           <h1 id="page-title">A dependable foundation for engineering decisions.</h1>
           <p className="lede">
             The workspace, runtime boundaries, and V1 contracts are ready. Product workflows will be
@@ -47,7 +47,7 @@ export function App() {
       </section>
 
       <footer>
-        Feature implementation begins with contract validation in M1. No engineering result is
+        V1 contracts now validate consistently across the browser and API. No engineering result is
         inferred by this shell.
       </footer>
     </main>

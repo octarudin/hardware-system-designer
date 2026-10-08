@@ -54,6 +54,9 @@ jobs:
       - name: Check formatting
         run: pnpm format:check
 
+      - name: Check generated contract drift
+        run: pnpm contracts:check
+
       - name: Lint
         run: pnpm lint
 

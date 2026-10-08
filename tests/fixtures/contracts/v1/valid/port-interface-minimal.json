@@ -1,0 +1,11 @@
+{
+  "schema_version": "hwsd.port-interface/1",
+  "port": {
+    "port_id": "PORT-GPIO",
+    "name": "GPIO",
+    "requirement": "OPTIONAL",
+    "direction": "BIDIRECTIONAL",
+    "interface": { "type": "GPIO_BIDIRECTIONAL", "bus_mode": "NOT_APPLICABLE" },
+    "bindings": []
+  }
+}

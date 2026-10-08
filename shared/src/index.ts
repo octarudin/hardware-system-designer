@@ -14,3 +14,11 @@ export interface ServiceStatus {
   readonly status: 'ok' | 'ready';
   readonly version: string;
 }
+
+export * from './contracts/http.js';
+export * from './contracts/schema-registry.js';
+export * from './contracts/semantic-validation.js';
+export type { HardwareSystemDesignerComponentSchemaV1 as ComponentSchemaV1 } from './generated/component-schema-v1.js';
+export type { HardwareSystemDesignerConnectionRuleResultV1 as ConnectionRuleResultV1 } from './generated/connection-rule-result-v1.js';
+export type { HardwareSystemDesignerPortInterfaceSchemaV1 as PortInterfaceSchemaV1 } from './generated/port-interface-schema-v1.js';
+export type { HardwareSystemDesignerProjectFileV1 as ProjectFileV1 } from './generated/project-file-v1.js';

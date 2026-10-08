@@ -1,0 +1,79 @@
+{
+  "schema_version": "hwsd.component/1",
+  "component_id": "CMP-REPRESENTATIVE",
+  "revision": 1,
+  "identity": { "name": "Representative controller" },
+  "classification": { "category": "MICROCONTROLLER", "abstraction": "BOARD" },
+  "lifecycle": { "status": "REVIEW_REQUIRED" },
+  "provenance": { "origin": "MANUAL", "datasheets": [], "field_evidence": [] },
+  "pins": [
+    {
+      "pin_id": "PIN-1",
+      "number": "1",
+      "name": "SDA",
+      "direction": "BIDIRECTIONAL",
+      "electrical_type": "OPEN_DRAIN",
+      "requirement": "OPTIONAL",
+      "logic_voltage": {
+        "min": { "value": 3.0, "unit": "V" },
+        "nominal": { "value": 3.3, "unit": "V" },
+        "max": { "value": 3.6, "unit": "V" }
+      },
+      "alternate_functions": [
+        {
+          "function_id": "FUNC-I2C_SDA",
+          "interface_type": "I2C",
+          "signal": "SDA",
+          "resource_id": "RES-I2C1",
+          "channel": "SDA"
+        }
+      ]
+    }
+  ],
+  "ports": [
+    {
+      "port_id": "PORT-I2C",
+      "name": "I2C bus",
+      "requirement": "OPTIONAL",
+      "direction": "BIDIRECTIONAL",
+      "interface": { "type": "I2C", "bus_mode": "SHARED_BUS", "bus_role": "CONTROLLER" },
+      "bindings": [
+        {
+          "pin_id": "PIN-1",
+          "function_id": "FUNC-I2C_SDA",
+          "resource_id": "RES-I2C1",
+          "channel": "SDA",
+          "signal": "SDA"
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": "RES-I2C1",
+      "type": "I2C",
+      "name": "I2C controller 1",
+      "share_mode": "SHARED_BUS",
+      "channels": [{ "channel": "SDA", "signal": "SDA" }],
+      "compatible_pin_mappings": [
+        {
+          "mapping_id": "MAP-I2C1",
+          "assignments": [{ "signal": "SDA", "pin_id": "PIN-1", "function_id": "FUNC-I2C_SDA" }]
+        }
+      ]
+    }
+  ],
+  "address_capabilities": [
+    {
+      "address_id": "ADDR-I2C",
+      "port_id": "PORT-I2C",
+      "kind": "I2C_7_BIT",
+      "mode": "SELECTABLE",
+      "allowed_values": [32, 33]
+    }
+  ],
+  "notes": [],
+  "created_at": "2026-01-01T00:00:00.000Z",
+  "updated_at": "2026-01-02T00:00:00.000Z",
+  "revision_notes": "Representative fixture"
+}

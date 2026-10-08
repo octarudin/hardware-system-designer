@@ -16,9 +16,9 @@ const migration = await readFile(resolve('database/migrations/0001_initial_schem
 const expectedTables = [
   'audit_events',
   'component_candidates',
+  'component_review_actions',
   'component_revision_datasheets',
   'component_revisions',
-  'component_review_actions',
   'components',
   'datasheet_import_jobs',
   'datasheets',

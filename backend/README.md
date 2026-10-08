@@ -32,6 +32,10 @@ M4 project endpoints:
 - `POST /api/v1/projects/import` — fail-closed Create Copy import.
 - `DELETE /api/v1/projects/:projectId` — soft-delete a project with an audit event.
 
+Create Copy import now runs the M5 full Design Check after structural and semantic validation.
+Engineering-incomplete projects may retain `COMP-001` findings, while forbidden persisted
+connections, electrical conflicts, allocation conflicts, and invalid buses fail closed.
+
 Every response includes `x-request-id`. HTTP failures use the shared error envelope with a stable code, message, request ID, and details array.
 
 Run from the repository root with `corepack pnpm --filter @hwsd/backend dev`.

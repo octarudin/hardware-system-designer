@@ -6,6 +6,7 @@ import {
   validateProjectFileSchema,
   validateProjectSemantics,
 } from '@hwsd/shared';
+import { evaluate } from '@hwsd/rule-engine';
 
 import { ApplicationError } from '../errors.js';
 import { parseStrictJson } from './strict-json.js';
@@ -266,9 +267,25 @@ export class ProjectService {
       );
     }
     const imported = validateProject(parsed);
+    const designCheck = evaluate({ project: imported, mode: 'DESIGN_CHECK' });
+    const blockingFindings = designCheck.findings.filter(
+      (finding) => finding.severity === 'ERROR' && finding.rule_id !== 'COMP-001',
+    );
+    if (blockingFindings.length) {
+      throw new ApplicationError(
+        422,
+        'PROJECT_ENGINEERING_INVALID',
+        'The project contains connections or allocations blocked by the V1 rule engine.',
+        blockingFindings.map((finding) => ({
+          code: finding.code,
+          path: finding.locations[0]?.path ?? '/',
+          message: finding.message,
+        })),
+      );
+    }
     const now = this.clock.now().toISOString();
     const projectId = this.ids.projectId();
-    const designCheck = imported.last_design_check
+    const copiedDesignCheck = imported.last_design_check
       ? {
           ...imported.last_design_check,
           evaluated_engineering_revision: 1,
@@ -293,7 +310,7 @@ export class ProjectService {
         ...imported.settings,
         autosave: { ...imported.settings.autosave, last_saved_at: now },
       },
-      ...(designCheck ? { last_design_check: designCheck } : {}),
+      ...(copiedDesignCheck ? { last_design_check: copiedDesignCheck } : {}),
     });
     const stored = await this.repository.create(copy, user.userId, 'PROJECT_IMPORTED');
     return { document: stored.document, saved: true };

@@ -2,12 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import { getRuleEngineDescriptor } from './index.js';
 
-describe('rule-engine M0 boundary', () => {
-  it('declares the approved ruleset without claiming an implementation', () => {
+describe('rule-engine descriptor', () => {
+  it('declares the implemented immutable V1 registry', () => {
     expect(getRuleEngineDescriptor()).toEqual({
       rulesetVersion: 'hwsd.connection-rules/1',
-      implementationStatus: 'NOT_IMPLEMENTED',
+      implementationStatus: 'IMPLEMENTED',
       deterministic: true,
+      ruleCount: 38,
     });
   });
 });

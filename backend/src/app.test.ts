@@ -19,7 +19,7 @@ describe('API skeleton', () => {
     expect(response.json()).toEqual({ service: 'api', status: 'ok', version: 'v1' });
   });
 
-  it('reports the contract and unimplemented rule-engine baseline', async () => {
+  it('reports the contract and implemented rule-engine baseline', async () => {
     const app = buildApp();
     apps.push(app);
 
@@ -30,7 +30,8 @@ describe('API skeleton', () => {
       apiVersion: 'v1',
       ruleEngine: {
         rulesetVersion: 'hwsd.connection-rules/1',
-        implementationStatus: 'NOT_IMPLEMENTED',
+        implementationStatus: 'IMPLEMENTED',
+        ruleCount: 38,
       },
     });
   });

@@ -4,9 +4,9 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-M4 project lifecycle and persistence. Authenticated users can create, search, rename, open,
-autosave, recover, export, import as a copy, and soft-delete canonical projects. Project saves use
-optimistic concurrency and distinguish document-only changes from engineering changes.
+M5 deterministic connection and engineering Rule Engine. The pure shared engine implements the 38
+required V1 structural, interface, electrical, allocation, bus, power, completeness, and lifecycle
+rules across preview, commit, and full Design Check modes.
 
 ## Prerequisites
 

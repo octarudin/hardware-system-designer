@@ -12,10 +12,13 @@ import {
 
 import type { AuthService } from './auth/auth-service.js';
 import { registerAuthRoutes } from './auth/routes.js';
+import type { ComponentService } from './components/component-service.js';
+import { registerComponentRoutes } from './components/routes.js';
 import { ApplicationError } from './errors.js';
 
 export interface BuildAppOptions {
   readonly authService?: AuthService;
+  readonly componentService?: ComponentService;
   readonly logger?: boolean;
   readonly secureCookies?: boolean;
 }
@@ -146,6 +149,13 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
     registerAuthRoutes(authApp, {
       service: options.authService,
       secureCookies: options.secureCookies ?? process.env.NODE_ENV === 'production',
+    }),
+  );
+
+  void app.register(async (componentApp) =>
+    registerComponentRoutes(componentApp, {
+      service: options.componentService,
+      authService: options.authService,
     }),
   );
 

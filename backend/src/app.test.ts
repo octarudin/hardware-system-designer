@@ -47,6 +47,9 @@ describe('API skeleton', () => {
     expect(document.paths).toHaveProperty('/api/v1/session/login');
     expect(document.paths).toHaveProperty('/api/v1/session');
     expect(document.paths).toHaveProperty('/api/v1/session/logout');
+    expect(document.paths).toHaveProperty('/api/v1/components');
+    expect(document.paths).toHaveProperty('/api/v1/components/{componentId}/revisions/{revision}');
+    expect(document.paths).toHaveProperty('/api/v1/admin/component-reviews');
   });
 
   it('returns the standard error envelope with a request id', async () => {

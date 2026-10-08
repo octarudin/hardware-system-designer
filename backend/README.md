@@ -12,6 +12,16 @@ Foundation endpoints:
 - `GET /api/v1/session` — return the active session principal.
 - `POST /api/v1/session/logout` — revoke the active session.
 
+M3 component endpoints:
+
+- `GET /api/v1/components` — search and filter latest component projections.
+- `GET /api/v1/components/:componentId/revisions/:revision` — retrieve an immutable definition.
+- `POST /api/v1/components` — validate and submit a manual component.
+- `POST /api/v1/components/:componentId/revisions` — submit an owner-authored revision.
+- `GET /api/v1/admin/component-reviews` — list pending administrator reviews.
+- `POST /api/v1/admin/component-reviews/:componentId/:revision/actions` — publish an immutable
+  administrator lifecycle decision.
+
 Every response includes `x-request-id`. HTTP failures use the shared error envelope with a stable code, message, request ID, and details array.
 
 Run from the repository root with `corepack pnpm --filter @hwsd/backend dev`.

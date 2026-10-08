@@ -180,7 +180,9 @@ footer {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -338,6 +340,20 @@ a:focus-visible {
   background: #146c43;
 }
 
+.nav-button {
+  width: 100%;
+  min-height: auto;
+  padding: 0.75rem 1rem;
+  color: #13221d;
+  background: transparent;
+  text-align: left;
+}
+
+.nav-button[aria-current='page'] {
+  color: #effff6;
+  background: #146c43;
+}
+
 .workspace {
   padding: clamp(2rem, 6vw, 5rem);
 }
@@ -357,6 +373,202 @@ a:focus-visible {
 
 .empty-state h2 {
   margin-top: 0;
+}
+
+.section-heading,
+.filter-bar,
+.form-actions,
+.review-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.section-heading h1 {
+  margin-bottom: 1.5rem;
+}
+
+.filter-bar {
+  justify-content: flex-start;
+  margin: 2rem 0;
+  padding: 1rem;
+  border: 1px solid rgb(19 34 29 / 12%);
+  border-radius: 0.8rem;
+  background: rgb(255 255 255 / 72%);
+}
+
+.filter-bar label,
+.component-form label,
+.review-card label {
+  display: grid;
+  gap: 0.4rem;
+  color: #34483e;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.filter-bar input,
+.filter-bar select,
+.component-form input,
+.component-form select,
+.component-form textarea,
+.review-card textarea {
+  min-height: 2.65rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #aab8b1;
+  border-radius: 0.55rem;
+  color: #13221d;
+  background: #fff;
+}
+
+.filter-bar input {
+  width: min(28rem, 60vw);
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+}
+
+.component-card,
+.detail-panel,
+.review-card {
+  padding: 1.25rem;
+  border: 1px solid rgb(19 34 29 / 12%);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 82%);
+  box-shadow: 0 0.75rem 2rem rgb(25 51 39 / 6%);
+}
+
+.component-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.component-card h2,
+.review-card h2 {
+  margin: 0.75rem 0 0.25rem;
+}
+
+.component-card p,
+.review-card p {
+  color: #65736d;
+}
+
+.detail-panel {
+  margin-top: 2rem;
+}
+
+.detail-panel pre {
+  max-height: 32rem;
+  overflow: auto;
+  padding: 1rem;
+  border-radius: 0.65rem;
+  color: #dcebe0;
+  background: #13221d;
+  font-size: 0.78rem;
+}
+
+.detail-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+}
+
+.detail-list div {
+  display: block;
+}
+
+.detail-list dd {
+  margin-top: 0.3rem;
+  text-align: left;
+}
+
+.component-form {
+  display: grid;
+  max-width: 62rem;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.component-form fieldset {
+  padding: 1.25rem;
+  border: 1px solid rgb(19 34 29 / 18%);
+  border-radius: 0.8rem;
+}
+
+.component-form legend {
+  padding: 0 0.4rem;
+  font-weight: 800;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.component-form textarea {
+  resize: vertical;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.8rem;
+}
+
+.validation-summary {
+  padding: 1rem 1.25rem;
+  border-left: 0.3rem solid #4a8d69;
+  border-radius: 0.4rem;
+  background: #e6f2e9;
+}
+
+.validation-summary.invalid {
+  border-color: #b33b3b;
+  background: #f8e8e8;
+}
+
+.validation-summary h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.validation-summary p,
+.validation-summary ul {
+  margin-bottom: 0;
+}
+
+.form-actions {
+  justify-content: flex-end;
+}
+
+.review-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.review-card {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) minmax(15rem, 1.2fr);
+  gap: 1rem 2rem;
+}
+
+.review-actions {
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.revision-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.revision-comparison pre {
+  min-height: 18rem;
 }
 
 @media (max-width: 760px) {
@@ -397,5 +609,24 @@ a:focus-visible {
 
   .sidebar nav {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .section-heading,
+  .filter-bar,
+  .review-card {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .filter-bar input {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .revision-comparison {
+    grid-template-columns: 1fr;
   }
 }

@@ -4,7 +4,10 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-M2 identity, authorization, and application shell. The application now uses Argon2id credentials, revocable server-side sessions, role/owner policies, versioned session endpoints, and an authenticated role-aware browser shell.
+M3 component library and manual authoring. Authenticated users can search immutable component
+revisions, validate and submit manual definitions, and publish owner-authored revisions. Admins can
+compare submissions and create verified, revision-requested, deprecated, rejected, or disabled
+revisions with transactional review and audit history.
 
 ## Prerequisites
 
@@ -38,6 +41,12 @@ With PostgreSQL running and `DATABASE_URL` loaded from `.env`, verify all migrat
 
 ```text
 corepack pnpm db:migrate:smoke
+```
+
+To exercise the complete M3 publication transaction against an isolated PostgreSQL schema, run:
+
+```text
+corepack pnpm db:component:smoke
 ```
 
 ## Repository Structure

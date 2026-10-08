@@ -18,7 +18,7 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${apiBaseUrl}${path}`, {
     ...init,
     credentials: 'include',
@@ -40,11 +40,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const authApi = {
-  current: () => request<SessionResponse>('/session'),
+  current: () => apiRequest<SessionResponse>('/session'),
   login: (credentials: LoginRequest) =>
-    request<SessionResponse>('/session/login', {
+    apiRequest<SessionResponse>('/session/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     }),
-  logout: () => request<LogoutResponse>('/session/logout', { method: 'POST', body: '{}' }),
+  logout: () => apiRequest<LogoutResponse>('/session/logout', { method: 'POST', body: '{}' }),
 };

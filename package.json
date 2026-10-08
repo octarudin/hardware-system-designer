@@ -23,6 +23,7 @@
     "test:schema": "vitest run tests/schema-assets.test.ts",
     "test:e2e": "playwright test",
     "db:migrate:smoke": "node scripts/migration-smoke.mjs",
+    "db:migrate": "node scripts/migrate.mjs",
     "infra:up": "docker compose up -d postgres minio",
     "infra:down": "docker compose down",
     "verify": "corepack pnpm contracts:check && corepack pnpm format:check && corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test:schema && corepack pnpm test && corepack pnpm build"

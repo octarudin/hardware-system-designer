@@ -1,12 +1,23 @@
 import { expect, test } from '@playwright/test';
 
-test('shows the implementation foundation without claiming feature completion', async ({
-  page,
-}) => {
+test('shows the secure login flow for an unauthenticated user', async ({ page }) => {
+  await page.route('**/api/v1/session', async (route) =>
+    route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        error: {
+          code: 'AUTH_REQUIRED',
+          message: 'Authentication is required.',
+          requestId: 'e2e-request',
+          details: [],
+        },
+      }),
+    }),
+  );
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'A dependable foundation for engineering decisions.',
-  );
-  await expect(page.getByText('M1 · Contract and validation foundation')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
+  await expect(page.getByLabel('Email')).toBeVisible();
+  await expect(page.getByLabel('Password')).toBeVisible();
 });

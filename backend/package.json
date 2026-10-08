@@ -7,13 +7,17 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "node --watch --enable-source-maps --import=tsx src/server.ts",
     "start": "node --enable-source-maps dist/server.js",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "user:create": "node scripts/create-user.mjs"
   },
   "dependencies": {
+    "@fastify/cookie": "11.1.2",
     "@fastify/swagger": "9.9.1",
     "@hwsd/rule-engine": "workspace:*",
     "@hwsd/shared": "workspace:*",
-    "fastify": "5.12.5"
+    "argon2": "0.45.1",
+    "fastify": "5.12.5",
+    "pg": "8.23.1"
   },
   "devDependencies": {
     "@types/node": "catalog:",

@@ -1,4 +1,5 @@
 import Fastify, { type FastifyInstance } from 'fastify';
+import cookie from '@fastify/cookie';
 import swagger from '@fastify/swagger';
 
 import { getRuleEngineDescriptor } from '@hwsd/rule-engine';
@@ -9,8 +10,14 @@ import {
   type ServiceStatus,
 } from '@hwsd/shared';
 
+import type { AuthService } from './auth/auth-service.js';
+import { registerAuthRoutes } from './auth/routes.js';
+import { ApplicationError } from './errors.js';
+
 export interface BuildAppOptions {
+  readonly authService?: AuthService;
   readonly logger?: boolean;
+  readonly secureCookies?: boolean;
 }
 
 const statusSchema = {
@@ -70,6 +77,7 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
       },
     },
   });
+  void app.register(cookie);
 
   app.addHook('onSend', async (request, reply, payload) => {
     void reply.header('x-request-id', request.id);
@@ -85,21 +93,38 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
         readonly message?: string;
       }[];
     };
-    const statusCode =
-      apiError.statusCode && apiError.statusCode >= 400 ? apiError.statusCode : 500;
+    const applicationError = error instanceof ApplicationError ? error : undefined;
+    const statusCode = applicationError
+      ? applicationError.statusCode
+      : apiError.statusCode && apiError.statusCode >= 400
+        ? apiError.statusCode
+        : 500;
     const isValidationError = Boolean(apiError.validation);
+    const isRateLimited = statusCode === 429;
     const envelope: HttpErrorEnvelope = {
       error: {
-        code: isValidationError ? 'REQUEST_VALIDATION_FAILED' : 'INTERNAL_SERVER_ERROR',
-        message: isValidationError
-          ? 'The request does not satisfy the API contract.'
-          : 'An unexpected error occurred.',
+        code:
+          applicationError?.code ??
+          (isValidationError
+            ? 'REQUEST_VALIDATION_FAILED'
+            : isRateLimited
+              ? 'RATE_LIMIT_EXCEEDED'
+              : 'INTERNAL_SERVER_ERROR'),
+        message:
+          applicationError?.message ??
+          (isValidationError
+            ? 'The request does not satisfy the API contract.'
+            : isRateLimited
+              ? 'Too many requests. Try again later.'
+              : 'An unexpected error occurred.'),
         requestId: request.id,
-        details: (apiError.validation ?? []).map((issue) => ({
-          code: `REQUEST_${issue.keyword.toUpperCase()}`,
-          path: issue.instancePath || '/',
-          message: issue.message ?? 'Request validation failed',
-        })),
+        details:
+          applicationError?.details ??
+          (apiError.validation ?? []).map((issue) => ({
+            code: `REQUEST_${issue.keyword.toUpperCase()}`,
+            path: issue.instancePath || '/',
+            message: issue.message ?? 'Request validation failed',
+          })),
       },
     };
     void reply.status(statusCode).send(envelope);
@@ -116,6 +141,13 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
     };
     void reply.status(404).send(envelope);
   });
+
+  void app.register(async (authApp) =>
+    registerAuthRoutes(authApp, {
+      service: options.authService,
+      secureCookies: options.secureCookies ?? process.env.NODE_ENV === 'production',
+    }),
+  );
 
   void app.register(async (routes) => {
     routes.get(

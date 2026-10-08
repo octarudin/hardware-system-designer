@@ -2,6 +2,6 @@
 
 React and Vite browser application.
 
-M0 provides the accessible application shell and confirms the V1 frontend stack. It intentionally contains no editor, library, authentication, or engineering behavior.
+M2 provides session discovery, an accessible login flow, authenticated loading/error states, logout, role-aware navigation, and a global render error boundary. It stores neither credentials nor session tokens in browser storage.
 
 Run from the repository root with `corepack pnpm --filter @hwsd/frontend dev`.

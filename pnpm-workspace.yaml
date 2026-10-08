@@ -10,4 +10,5 @@ catalog:
   typescript: 6.0.3
 
 allowBuilds:
+  argon2: true
   esbuild: true

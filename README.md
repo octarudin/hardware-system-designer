@@ -4,7 +4,7 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-M1 contract and validation foundation. All four V1 JSON Schemas execute from one browser-safe Ajv 2020 registry, derived TypeScript contracts are reproducible, semantic component/project validation is available without I/O, and the API exposes stable errors, request IDs, and OpenAPI.
+M2 identity, authorization, and application shell. The application now uses Argon2id credentials, revocable server-side sessions, role/owner policies, versioned session endpoints, and an authenticated role-aware browser shell.
 
 ## Prerequisites
 
@@ -20,6 +20,7 @@ The project pins pnpm through the root `packageManager` field; a global pnpm ins
 corepack pnpm install --frozen-lockfile
 Copy-Item .env.example .env
 corepack pnpm infra:up
+corepack pnpm db:migrate
 corepack pnpm dev
 ```
 
@@ -33,7 +34,7 @@ corepack pnpm verify
 
 After changing a canonical file in `docs/schemas`, regenerate and review the derived artifacts with `corepack pnpm contracts:generate`. CI rejects uncommitted generated drift.
 
-With PostgreSQL running and `DATABASE_URL` loaded from `.env`, verify the initial migration with:
+With PostgreSQL running and `DATABASE_URL` loaded from `.env`, verify all migrations in an isolated schema with:
 
 ```text
 corepack pnpm db:migrate:smoke

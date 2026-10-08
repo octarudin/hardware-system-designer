@@ -44,6 +44,9 @@ describe('API skeleton', () => {
 
     expect(response.statusCode).toBe(200);
     expect(document.paths).toHaveProperty('/api/v1');
+    expect(document.paths).toHaveProperty('/api/v1/session/login');
+    expect(document.paths).toHaveProperty('/api/v1/session');
+    expect(document.paths).toHaveProperty('/api/v1/session/logout');
   });
 
   it('returns the standard error envelope with a request id', async () => {

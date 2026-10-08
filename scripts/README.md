@@ -5,6 +5,10 @@ schema. It verifies manual submission, administrator verification, projection up
 audit records, and the immutable-revision trigger. Run it with `pnpm db:component:smoke` after
 setting `DATABASE_URL`.
 
+`project-smoke.mjs` exercises the M4 repository and command service against an isolated PostgreSQL
+schema. It verifies compare-and-swap conflicts, cosmetic revision behavior, UTF-8 export/Create Copy
+import, audit events, and soft deletion. Run it with `pnpm db:project:smoke`.
+
 Development and maintenance scripts.
 
 - `migration-smoke.mjs` applies every migration inside a temporary PostgreSQL schema, verifies the expected tables, and removes the temporary schema. It requires `DATABASE_URL` and does not modify the public schema.

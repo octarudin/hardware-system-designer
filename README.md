@@ -4,10 +4,9 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-M3 component library and manual authoring. Authenticated users can search immutable component
-revisions, validate and submit manual definitions, and publish owner-authored revisions. Admins can
-compare submissions and create verified, revision-requested, deprecated, rejected, or disabled
-revisions with transactional review and audit history.
+M4 project lifecycle and persistence. Authenticated users can create, search, rename, open,
+autosave, recover, export, import as a copy, and soft-delete canonical projects. Project saves use
+optimistic concurrency and distinguish document-only changes from engineering changes.
 
 ## Prerequisites
 
@@ -47,6 +46,13 @@ To exercise the complete M3 publication transaction against an isolated PostgreS
 
 ```text
 corepack pnpm db:component:smoke
+```
+
+To verify the M4 compare-and-swap, export/Create Copy import, audit, and soft-delete flow against
+PostgreSQL, run:
+
+```text
+corepack pnpm db:project:smoke
 ```
 
 ## Repository Structure

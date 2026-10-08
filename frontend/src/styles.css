@@ -571,6 +571,145 @@ a:focus-visible {
   min-height: 18rem;
 }
 
+.file-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border: 1px solid #aab8b1;
+  border-radius: 0.6rem;
+  color: #23543d;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.project-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.25rem;
+  border: 1px solid rgb(19 34 29 / 12%);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 82%);
+}
+
+.project-card h2 {
+  margin: 0.7rem 0 0.25rem;
+}
+
+.project-card p,
+.project-card small {
+  color: #65736d;
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.danger-button {
+  color: #fff;
+  background: #a23535;
+}
+
+.inline-dialog {
+  max-width: 42rem;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid #9dafa5;
+  border-radius: 0.8rem;
+  background: #fff;
+  box-shadow: 0 1rem 3rem rgb(25 51 39 / 10%);
+}
+
+.inline-dialog label,
+.settings-panel label,
+.project-bar label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 700;
+}
+
+.inline-dialog input,
+.settings-panel textarea,
+.project-bar input {
+  min-height: 2.65rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #aab8b1;
+  border-radius: 0.55rem;
+}
+
+.conflict-dialog {
+  border-color: #b64b35;
+  background: #fff4ef;
+}
+
+.project-bar {
+  display: flex;
+  align-items: end;
+  gap: 1rem;
+  margin: -1rem -2rem 2rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgb(19 34 29 / 14%);
+  background: rgb(255 255 255 / 72%);
+}
+
+.project-bar label {
+  flex: 1;
+}
+
+.save-state {
+  min-width: 8rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 999px;
+  color: #23543d;
+  background: #dcebe0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.save-conflict,
+.save-save-failed {
+  color: #7d2525;
+  background: #f8dede;
+}
+
+.editor-placeholder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.35fr);
+  gap: 2rem;
+}
+
+.settings-panel {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgb(19 34 29 / 12%);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 82%);
+}
+
+.settings-panel h2 {
+  margin: 0;
+}
+
 @media (max-width: 760px) {
   .phase {
     display: none;
@@ -627,6 +766,16 @@ a:focus-visible {
   }
 
   .revision-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card,
+  .project-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .editor-placeholder {
     grid-template-columns: 1fr;
   }
 }

@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, expect, it } from 'vitest';
 
 import { AuthenticatedShell, ComponentAuthoring, LoginScreen, ReviewQueue } from './App.js';
+import { ProjectDashboard } from './projects-ui.js';
 
 function render(view: ReactNode, prepare?: (client: QueryClient) => void): string {
   const client = new QueryClient();
@@ -74,5 +75,30 @@ describe('authenticated application shell', () => {
     expect(markup).toContain('APPROVE');
     expect(markup).toContain('REQUEST REVISION');
     expect(markup).toContain('DISABLE');
+  });
+
+  it('renders dashboard actions and persisted project metadata', () => {
+    const markup = render(<ProjectDashboard onOpen={() => undefined} />, (client) =>
+      client.setQueryData(['projects', ''], {
+        items: [
+          {
+            projectId: 'PROJ-TEST',
+            name: 'Controller design',
+            description: 'Persistent project',
+            documentRevision: 3,
+            engineeringRevision: 2,
+            updatedAt: '2026-10-08T00:00:00.000Z',
+            designCheck: null,
+          },
+        ],
+      }),
+    );
+
+    expect(markup).toContain('New Project');
+    expect(markup).toContain('Import .txt');
+    expect(markup).toContain('Controller design');
+    expect(markup).toContain('Revision 3');
+    expect(markup).toContain('Export');
+    expect(markup).toContain('Delete');
   });
 });

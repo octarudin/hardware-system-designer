@@ -22,6 +22,16 @@ M3 component endpoints:
 - `POST /api/v1/admin/component-reviews/:componentId/:revision/actions` — publish an immutable
   administrator lifecycle decision.
 
+M4 project endpoints:
+
+- `GET /api/v1/projects` and `GET /api/v1/projects/:projectId` — owner-scoped project reads.
+- `POST /api/v1/projects` — create an empty canonical project.
+- `PUT /api/v1/projects/:projectId` — schema-validated compare-and-swap save.
+- `PATCH /api/v1/projects/:projectId` — rename through the same revision rules.
+- `GET /api/v1/projects/:projectId/export` — generate the portable UTF-8 representation.
+- `POST /api/v1/projects/import` — fail-closed Create Copy import.
+- `DELETE /api/v1/projects/:projectId` — soft-delete a project with an audit event.
+
 Every response includes `x-request-id`. HTTP failures use the shared error envelope with a stable code, message, request ID, and details array.
 
 Run from the repository root with `corepack pnpm --filter @hwsd/backend dev`.

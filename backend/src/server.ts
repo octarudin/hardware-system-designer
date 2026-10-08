@@ -6,6 +6,8 @@ import { AuthService } from './auth/auth-service.js';
 import { PostgresAuthRepository } from './auth/postgres-auth-repository.js';
 import { ComponentService } from './components/component-service.js';
 import { PostgresComponentRepository } from './components/postgres-component-repository.js';
+import { PostgresProjectRepository } from './projects/postgres-project-repository.js';
+import { ProjectService } from './projects/project-service.js';
 
 const host = process.env.API_HOST ?? '127.0.0.1';
 const parsedPort = Number.parseInt(process.env.API_PORT ?? '3000', 10);
@@ -20,7 +22,8 @@ if (!databaseUrl) throw new Error('DATABASE_URL is required.');
 const pool = new Pool({ connectionString: databaseUrl });
 const authService = new AuthService(new PostgresAuthRepository(pool), new Argon2PasswordVerifier());
 const componentService = new ComponentService(new PostgresComponentRepository(pool));
-const app = buildApp({ authService, componentService, logger: true });
+const projectService = new ProjectService(new PostgresProjectRepository(pool));
+const app = buildApp({ authService, componentService, projectService, logger: true });
 app.addHook('onClose', async () => pool.end());
 
 async function shutdown(signal: string): Promise<void> {

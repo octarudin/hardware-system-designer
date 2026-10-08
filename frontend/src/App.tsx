@@ -14,9 +14,10 @@ import {
 
 import { ApiError, authApi } from './auth-api.js';
 import { componentApi } from './component-api.js';
+import { ProjectDashboard, ProjectEditor } from './projects-ui.js';
 
 const sessionKey = ['session'] as const;
-type Screen = 'projects' | 'components' | 'new-component' | 'review';
+type Screen = 'projects' | 'project-editor' | 'components' | 'new-component' | 'review';
 
 function Brand() {
   return (
@@ -93,20 +94,6 @@ export function LoginScreen() {
         </p>
       </section>
     </main>
-  );
-}
-
-function ProjectsPlaceholder({ user }: { readonly user: AuthenticatedUser }) {
-  return (
-    <>
-      <p className="eyebrow">Authenticated workspace</p>
-      <h1>Welcome back, {user.displayName}.</h1>
-      <p className="lede">The component library is ready. Project authoring arrives in M4.</p>
-      <section className="empty-state">
-        <h2>Workspace ready</h2>
-        <p>Your session and role protect every component workflow.</p>
-      </section>
-    </>
   );
 }
 
@@ -591,7 +578,8 @@ function ReviewComparison({
 
 export function AuthenticatedShell({ user }: { readonly user: AuthenticatedUser }) {
   const queryClient = useQueryClient();
-  const [screen, setScreen] = useState<Screen>('components');
+  const [screen, setScreen] = useState<Screen>('projects');
+  const [projectId, setProjectId] = useState<string | null>(null);
   const logout = useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => queryClient.setQueryData<SessionResponse | null>(sessionKey, null),
@@ -616,7 +604,7 @@ export function AuthenticatedShell({ user }: { readonly user: AuthenticatedUser 
           <button
             type="button"
             className="nav-button"
-            aria-current={screen === 'projects' ? 'page' : undefined}
+            aria-current={screen === 'projects' || screen === 'project-editor' ? 'page' : undefined}
             onClick={navigate('projects')}
           >
             Projects
@@ -647,7 +635,17 @@ export function AuthenticatedShell({ user }: { readonly user: AuthenticatedUser 
         </nav>
       </aside>
       <main className="workspace">
-        {screen === 'projects' ? <ProjectsPlaceholder user={user} /> : null}
+        {screen === 'projects' ? (
+          <ProjectDashboard
+            onOpen={(selectedProjectId) => {
+              setProjectId(selectedProjectId);
+              setScreen('project-editor');
+            }}
+          />
+        ) : null}
+        {screen === 'project-editor' && projectId ? (
+          <ProjectEditor projectId={projectId} onBack={navigate('projects')} />
+        ) : null}
         {screen === 'components' ? <ComponentLibrary onCreate={navigate('new-component')} /> : null}
         {screen === 'new-component' ? (
           <ComponentAuthoring onComplete={navigate('components')} />

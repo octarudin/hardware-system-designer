@@ -9,6 +9,10 @@ setting `DATABASE_URL`.
 schema. It verifies compare-and-swap conflicts, cosmetic revision behavior, UTF-8 export/Create Copy
 import, audit events, and soft deletion. Run it with `pnpm db:project:smoke`.
 
+`datasheet-smoke.mjs` exercises the M7 PostgreSQL worker queue in an isolated schema. It verifies
+lease claiming and heartbeat, candidate completion, recorded model metadata, terminal failure, and
+expired-lease recovery. Run it with `pnpm db:datasheet:smoke`.
+
 Development and maintenance scripts.
 
 - `migration-smoke.mjs` applies every migration inside a temporary PostgreSQL schema, verifies the expected tables, and removes the temporary schema. It requires `DATABASE_URL` and does not modify the public schema.

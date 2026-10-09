@@ -15,9 +15,11 @@ import {
 import { ApiError, authApi } from './auth-api.js';
 import { componentApi } from './component-api.js';
 import { ProjectDashboard, ProjectEditor } from './projects-ui.js';
+import { DatasheetImports } from './datasheet-ui.js';
 
 const sessionKey = ['session'] as const;
-type Screen = 'projects' | 'project-editor' | 'components' | 'new-component' | 'review';
+type Screen =
+  'projects' | 'project-editor' | 'components' | 'new-component' | 'datasheets' | 'review';
 
 function Brand() {
   return (
@@ -619,7 +621,12 @@ export function AuthenticatedShell({ user }: { readonly user: AuthenticatedUser 
           >
             Components
           </button>
-          <button type="button" className="nav-button" disabled>
+          <button
+            type="button"
+            className="nav-button"
+            aria-current={screen === 'datasheets' ? 'page' : undefined}
+            onClick={navigate('datasheets')}
+          >
             Datasheets
           </button>
           {user.role === 'ADMIN' ? (
@@ -650,6 +657,7 @@ export function AuthenticatedShell({ user }: { readonly user: AuthenticatedUser 
         {screen === 'new-component' ? (
           <ComponentAuthoring onComplete={navigate('components')} />
         ) : null}
+        {screen === 'datasheets' ? <DatasheetImports /> : null}
         {screen === 'review' && user.role === 'ADMIN' ? <ReviewQueue /> : null}
       </main>
     </div>

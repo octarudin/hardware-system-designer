@@ -40,6 +40,10 @@ M6 project commands add immutable component snapshots, connection preview and at
 server-side warning revalidation, allocation persistence, transactional Design Check history, and
 explicit component revision replacement with impact evaluation.
 
+M7 adds owner-scoped datasheet import, short-lived authorized download, retry, candidate correction,
+rejection, and atomic publication endpoints. PDF signature, parseability, size, and page limits are
+validated before S3-compatible storage and queue creation.
+
 Every response includes `x-request-id`. HTTP failures use the shared error envelope with a stable code, message, request ID, and details array.
 
 Run from the repository root with `corepack pnpm --filter @hwsd/backend dev`.

@@ -27,6 +27,7 @@ export interface Publication {
   readonly createComponent: boolean;
   readonly reviewAction: PersistedReviewAction;
   readonly reviewNote?: string;
+  readonly sourceCandidateId?: string;
 }
 
 export interface ComponentRepository {

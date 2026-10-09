@@ -14,6 +14,8 @@ import type { AuthService } from './auth/auth-service.js';
 import { registerAuthRoutes } from './auth/routes.js';
 import type { ComponentService } from './components/component-service.js';
 import { registerComponentRoutes } from './components/routes.js';
+import type { DatasheetService } from './datasheets/datasheet-service.js';
+import { registerDatasheetRoutes } from './datasheets/routes.js';
 import { ApplicationError } from './errors.js';
 import type { ProjectService } from './projects/project-service.js';
 import { registerProjectRoutes } from './projects/routes.js';
@@ -22,6 +24,7 @@ export interface BuildAppOptions {
   readonly authService?: AuthService;
   readonly componentService?: ComponentService;
   readonly projectService?: ProjectService;
+  readonly datasheetService?: DatasheetService;
   readonly logger?: boolean;
   readonly secureCookies?: boolean;
 }
@@ -165,6 +168,13 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
   void app.register(async (projectApp) =>
     registerProjectRoutes(projectApp, {
       service: options.projectService,
+      authService: options.authService,
+    }),
+  );
+
+  void app.register(async (datasheetApp) =>
+    registerDatasheetRoutes(datasheetApp, {
+      service: options.datasheetService,
       authService: options.authService,
     }),
   );

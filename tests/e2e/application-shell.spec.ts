@@ -143,3 +143,83 @@ test('opens the M6 engineering editor with its five stable regions', async ({ pa
   await expect(page.getByRole('button', { name: 'Run Design Check' })).toBeVisible();
   await expect(page.getByText('Check stale')).toBeVisible();
 });
+
+test('shows distinct M7 datasheet candidates in the human review queue', async ({ page }) => {
+  await page.route('**/api/v1/session', async (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        user: {
+          userId: 'USR-E2E',
+          email: 'engineer@example.com',
+          displayName: 'E2E Engineer',
+          role: 'USER',
+        },
+        expiresAt: '2026-10-10T00:00:00.000Z',
+      }),
+    }),
+  );
+  await page.route('**/api/v1/projects', async (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: '{"items":[]}' }),
+  );
+  await page.route('**/api/v1/datasheet-imports', async (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: [
+          {
+            importId: 'IMPORT-E2E',
+            datasheetId: 'DS-E2E',
+            filename: 'combined-datasheet.pdf',
+            byteSize: 4096,
+            pageCount: 8,
+            sha256: 'a'.repeat(64),
+            status: 'REVIEW_REQUIRED',
+            modelName: 'gpt-5.4-mini-test',
+            attemptCount: 1,
+            maxAttempts: 3,
+            requestedAt: '2026-10-09T00:00:00.000Z',
+            startedAt: '2026-10-09T00:00:01.000Z',
+            completedAt: '2026-10-09T00:00:02.000Z',
+            errorCode: null,
+            errorMessage: null,
+            candidates: [
+              {
+                candidateId: 'CAND-A',
+                ordinal: 1,
+                detectedLabel: 'Controller A',
+                overallConfidence: 0.92,
+                status: 'DETECTED',
+                document: {},
+                publishedComponentId: null,
+                publishedRevision: null,
+              },
+              {
+                candidateId: 'CAND-B',
+                ordinal: 2,
+                detectedLabel: 'Transceiver B',
+                overallConfidence: 0.84,
+                status: 'SELECTED',
+                document: {},
+                publishedComponentId: null,
+                publishedRevision: null,
+              },
+            ],
+          },
+        ],
+      }),
+    }),
+  );
+
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Datasheets' }).click();
+
+  await expect(page.getByRole('heading', { name: 'Datasheet imports.' })).toBeVisible();
+  await expect(page.getByText('combined-datasheet.pdf')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Controller A' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Transceiver B' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Review' })).toHaveCount(2);
+  await expect(page.getByRole('button', { name: 'Reject' })).toHaveCount(2);
+});

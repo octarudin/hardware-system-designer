@@ -15,4 +15,7 @@ M6 adds the command-based engineering editor with bounded undo/redo, keyboard an
 pan/zoom persistence, component/connection inspection, bus and power setup, live rule findings,
 explicit warning confirmation, Design Check staleness, and component revision impact review.
 
+M7 adds PDF upload constraints, import progress polling, multi-candidate selection/rejection, an
+eight-step evidence-aware review flow, editable candidate JSON, and schema/semantic publication gates.
+
 Run from the repository root with `corepack pnpm --filter @hwsd/frontend dev`.

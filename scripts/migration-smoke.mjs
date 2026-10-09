@@ -13,8 +13,8 @@ if (!databaseUrl) {
 const schemaName = `migration_smoke_${randomUUID().replaceAll('-', '_')}`;
 const quotedSchemaName = `"${schemaName}"`;
 const migrations = await Promise.all(
-  ['0001_initial_schema.sql', '0002_auth_sessions.sql'].map(async (filename) =>
-    readFile(resolve('database/migrations', filename), 'utf8'),
+  ['0001_initial_schema.sql', '0002_auth_sessions.sql', '0003_datasheet_job_leases.sql'].map(
+    async (filename) => readFile(resolve('database/migrations', filename), 'utf8'),
   ),
 );
 const expectedTables = [

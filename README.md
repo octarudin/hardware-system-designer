@@ -4,10 +4,9 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-M6 engineering editor and connection vertical slice. The application now combines immutable
-component snapshots, command-based canvas editing, deterministic connection preview/commit,
-allocation persistence, warning confirmation, Design Check history, and explicit component update
-impact review.
+M7 datasheet and AI candidate pipeline. The application now securely validates and stores PDFs,
+processes leased extraction jobs, preserves claim-level evidence, and requires human review plus
+deterministic Component Schema V1 validation before publication.
 
 ## Prerequisites
 
@@ -55,6 +54,17 @@ soft-delete behavior against PostgreSQL, run:
 ```text
 corepack pnpm db:project:smoke
 ```
+
+To verify the M7 leased worker queue, candidate persistence, terminal failures, and expired-lease
+recovery against PostgreSQL, run:
+
+```text
+corepack pnpm db:datasheet:smoke
+```
+
+Datasheet uploads work without an AI credential, but jobs remain queued until the worker is started
+with `OPENAI_API_KEY`. The worker sends bounded extracted text—not the original PDF—and the selected
+model can be overridden with `OPENAI_MODEL`.
 
 ## Repository Structure
 

@@ -123,6 +123,39 @@ describe('component authoring and review service', () => {
     expect(repository.publications).toHaveLength(0);
   });
 
+  it('publishes an AI candidate with server-owned extraction provenance', async () => {
+    const { repository, service } = setup();
+
+    const created = await service.createFromCandidate(
+      engineer,
+      'CAND-TEST',
+      {
+        ...draft(),
+        provenance: {
+          datasheets: [
+            {
+              datasheet_id: 'DS-TEST',
+              filename: 'test.pdf',
+              media_type: 'application/pdf',
+              byte_size: 512,
+              storage_ref: 'datasheets/test.pdf',
+              uploaded_at: '2026-02-01T00:00:00.000Z',
+            },
+          ],
+          field_evidence: [],
+        },
+      },
+      'gpt-5.4-mini-test',
+    );
+
+    expect(created.definition.provenance).toMatchObject({
+      origin: 'AI_DATASHEET_EXTRACTION',
+      extraction_model: 'gpt-5.4-mini-test',
+      extracted_at: '2026-02-01T00:00:00.000Z',
+    });
+    expect(repository.publications[0]).toMatchObject({ sourceCandidateId: 'CAND-TEST' });
+  });
+
   it('creates a new immutable VERIFIED revision when an admin approves', async () => {
     const { repository, service } = setup();
     await service.create(engineer, draft());

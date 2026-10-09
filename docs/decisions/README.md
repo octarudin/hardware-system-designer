@@ -11,5 +11,6 @@ Current decisions:
 - `0005-json-schema-source-of-truth.md` — schema-first contract ownership and validation.
 - `0006-session-threat-model.md` — concrete session expiry, cookie, CSRF, and throttling controls.
 - `0007-editor-performance-envelope.md` — supported V1 project size and editor latency budgets.
+- `0008-openai-structured-datasheet-extraction.md` — bounded, structured, human-reviewed AI extraction.
 
 Statuses are `PROPOSED`, `ACCEPTED`, `SUPERSEDED`, or `REJECTED`.

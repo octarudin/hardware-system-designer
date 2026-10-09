@@ -18,6 +18,7 @@ export interface ServiceStatus {
 export * from './contracts/http.js';
 export * from './contracts/auth.js';
 export * from './contracts/components.js';
+export * from './contracts/datasheets.js';
 export * from './contracts/projects.js';
 export * from './contracts/schema-registry.js';
 export * from './contracts/semantic-validation.js';

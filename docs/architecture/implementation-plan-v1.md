@@ -350,6 +350,9 @@ Work package IDs are stable planning references. A package is complete only when
 
 ### M7 — Datasheet and AI Candidate Pipeline
 
+**Implementation status:** completed on 2026-10-09. Provider decision `D3` is recorded by ADR 0008;
+live model-quality scoring remains an M8 release-evidence task before production activation.
+
 **Goal:** turn an untrusted PDF into reviewable candidates without granting engineering authority to AI.
 
 | ID | Work package | Depends on | Required output |
@@ -495,7 +498,7 @@ A work package is done only when:
 | `D0` Toolchain compatibility | End of `M0-02` | exact Node, pnpm, TypeScript, Vite, React, Fastify, Ajv, and test versions proven together | all feature code |
 | `D1` Session threat model | Before `M2-01` | cookie policy, expiry, revocation, CSRF strategy, login rate limits | authentication |
 | `D2` Editor performance envelope | Closed by ADR 0007 | supported project-size fixture and interaction/rule latency budgets | editor architecture |
-| `D3` AI provider/model | Before `M7-04` | data handling, regional/privacy constraints, structured-output capability, cost/latency ceiling, evaluation score | live AI integration |
+| `D3` AI provider/model | Closed by ADR 0008 | OpenAI Responses structured output, bounded data handling/cost/latency, M8 live evaluation threshold | live AI integration |
 | `D4` Production hosting | Before `M8-04` | runtime, database, object storage, secrets, backup, ingress/TLS, monitoring ownership | release |
 
 Only `D0` is required before the first implementation commit. Deferred gates do not justify speculative provider-specific code.

@@ -13,8 +13,8 @@ if (!databaseUrl) throw new Error('DATABASE_URL is required for the component sm
 const schemaName = `component_smoke_${randomUUID().replaceAll('-', '_')}`;
 const quotedSchemaName = `"${schemaName}"`;
 const migrations = await Promise.all(
-  ['0001_initial_schema.sql', '0002_auth_sessions.sql'].map((filename) =>
-    readFile(resolve('database/migrations', filename), 'utf8'),
+  ['0001_initial_schema.sql', '0002_auth_sessions.sql', '0003_datasheet_job_leases.sql'].map(
+    (filename) => readFile(resolve('database/migrations', filename), 'utf8'),
   ),
 );
 const administrator = new Client({ connectionString: databaseUrl });

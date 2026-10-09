@@ -25,6 +25,7 @@
     "db:migrate:smoke": "node scripts/migration-smoke.mjs",
     "db:component:smoke": "corepack pnpm build && node scripts/component-smoke.mjs",
     "db:project:smoke": "corepack pnpm build && node scripts/project-smoke.mjs",
+    "db:datasheet:smoke": "corepack pnpm build && node scripts/datasheet-smoke.mjs",
     "db:migrate": "node scripts/migrate.mjs",
     "infra:up": "docker compose up -d postgres minio",
     "infra:down": "docker compose down",

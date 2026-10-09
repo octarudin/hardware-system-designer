@@ -591,6 +591,138 @@ a:focus-visible {
   clip: rect(0 0 0 0);
 }
 
+.import-list,
+.candidate-review {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.import-card,
+.candidate-card,
+.candidate-review {
+  padding: 1.25rem;
+  border: 1px solid rgb(19 34 29 / 14%);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 86%);
+  box-shadow: 0 0.75rem 2rem rgb(25 51 39 / 6%);
+}
+
+.import-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.import-heading h2,
+.candidate-card h3 {
+  margin: 0.6rem 0 0.25rem;
+}
+
+.import-heading p,
+.candidate-card p {
+  margin: 0;
+  color: #65736d;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  color: #315848;
+  background: #e2eee7;
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+}
+
+.status-failed {
+  color: #812e2e;
+  background: #f8dede;
+}
+
+.status-processing,
+.status-queued {
+  color: #79540f;
+  background: #fff0c7;
+}
+
+.import-progress {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.import-progress li {
+  padding: 0.55rem;
+  border-radius: 0.45rem;
+  color: #6c7872;
+  background: #edf1ef;
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-align: center;
+}
+
+.import-progress li.complete {
+  color: #185b3b;
+  background: #dcefe4;
+}
+
+.candidate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.candidate-card {
+  box-shadow: none;
+}
+
+.review-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.review-steps button {
+  min-height: 3.5rem;
+  padding: 0.55rem;
+  font-size: 0.72rem;
+}
+
+.candidate-review > label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 750;
+}
+
+.candidate-json {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #aab8b1;
+  border-radius: 0.6rem;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.78rem;
+  resize: vertical;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 0.7rem;
+  padding-left: 1.25rem;
+}
+
+.evidence-list blockquote {
+  margin: 0.35rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border-left: 0.2rem solid #77a78e;
+  color: #52665c;
+  background: #f2f7f4;
+}
+
 .project-list {
   display: grid;
   gap: 1rem;
@@ -1041,6 +1173,11 @@ a:focus-visible {
   }
 
   .revision-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .import-progress,
+  .review-steps {
     grid-template-columns: 1fr;
   }
 

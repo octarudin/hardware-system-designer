@@ -85,6 +85,7 @@ export class ComponentService {
       createdAt: now,
       updatedAt: now,
       lifecycle: { status: 'PENDING_ADMIN_VERIFICATION' },
+      origin: 'MANUAL',
     });
     return this.publish({
       definition,
@@ -92,6 +93,33 @@ export class ComponentService {
       expectedLatestRevision: 0,
       createComponent: true,
       reviewAction: 'SUBMITTED',
+    });
+  }
+
+  public async createFromCandidate(
+    user: AuthenticatedUser,
+    candidateId: string,
+    draft: ComponentDraft,
+    extractionModel: string,
+  ) {
+    const now = this.clock.now().toISOString();
+    const definition = this.buildDefinition(draft, {
+      componentId: this.ids.componentId(),
+      revision: 1,
+      createdAt: now,
+      updatedAt: now,
+      lifecycle: { status: 'PENDING_ADMIN_VERIFICATION' },
+      origin: 'AI_DATASHEET_EXTRACTION',
+      extractedAt: now,
+      extractionModel,
+    });
+    return this.publish({
+      definition,
+      actorUserId: user.userId,
+      expectedLatestRevision: 0,
+      createComponent: true,
+      reviewAction: 'SUBMITTED',
+      sourceCandidateId: candidateId,
     });
   }
 
@@ -111,6 +139,7 @@ export class ComponentService {
       createdAt: latest.definition.created_at,
       updatedAt: this.clock.now().toISOString(),
       lifecycle: { status: 'PENDING_ADMIN_VERIFICATION' },
+      origin: 'MANUAL',
     });
     return this.publish({
       definition,
@@ -183,6 +212,9 @@ export class ComponentService {
       createdAt: string;
       updatedAt: string;
       lifecycle: ComponentSchemaV1['lifecycle'];
+      origin: ComponentSchemaV1['provenance']['origin'];
+      extractedAt?: string;
+      extractionModel?: string;
     },
   ): ComponentSchemaV1 {
     return validationError({
@@ -191,7 +223,12 @@ export class ComponentService {
       component_id: trusted.componentId,
       revision: trusted.revision,
       lifecycle: trusted.lifecycle,
-      provenance: { ...draft.provenance, origin: 'MANUAL' },
+      provenance: {
+        ...draft.provenance,
+        origin: trusted.origin,
+        ...(trusted.extractedAt ? { extracted_at: trusted.extractedAt } : {}),
+        ...(trusted.extractionModel ? { extraction_model: trusted.extractionModel } : {}),
+      },
       created_at: trusted.createdAt,
       updated_at: trusted.updatedAt,
     });

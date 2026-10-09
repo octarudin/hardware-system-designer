@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, expect, it } from 'vitest';
 
 import { AuthenticatedShell, ComponentAuthoring, LoginScreen, ReviewQueue } from './App.js';
+import { DatasheetImports } from './datasheet-ui.js';
 import { ProjectDashboard } from './projects-ui.js';
 
 function render(view: ReactNode, prepare?: (client: QueryClient) => void): string {
@@ -100,5 +101,59 @@ describe('authenticated application shell', () => {
     expect(markup).toContain('Revision 3');
     expect(markup).toContain('Export');
     expect(markup).toContain('Delete');
+  });
+
+  it('renders distinct reviewable datasheet candidates with provenance workflow controls', () => {
+    const markup = render(<DatasheetImports />, (client) =>
+      client.setQueryData(['datasheet-imports'], {
+        items: [
+          {
+            importId: 'IMPORT-TEST',
+            datasheetId: 'DS-TEST',
+            filename: 'dual-device.pdf',
+            byteSize: 2048,
+            pageCount: 4,
+            sha256: 'a'.repeat(64),
+            status: 'REVIEW_REQUIRED',
+            modelName: 'gpt-5.4-mini-test',
+            attemptCount: 1,
+            maxAttempts: 3,
+            requestedAt: '2026-10-09T00:00:00.000Z',
+            startedAt: '2026-10-09T00:00:01.000Z',
+            completedAt: '2026-10-09T00:00:02.000Z',
+            errorCode: null,
+            errorMessage: null,
+            candidates: [
+              {
+                candidateId: 'CAND-ONE',
+                ordinal: 1,
+                detectedLabel: 'Sensor A',
+                overallConfidence: 0.9,
+                status: 'DETECTED',
+                document: {},
+                publishedComponentId: null,
+                publishedRevision: null,
+              },
+              {
+                candidateId: 'CAND-TWO',
+                ordinal: 2,
+                detectedLabel: 'Sensor B',
+                overallConfidence: 0.8,
+                status: 'SELECTED',
+                document: {},
+                publishedComponentId: null,
+                publishedRevision: null,
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    expect(markup).toContain('dual-device.pdf');
+    expect(markup).toContain('Sensor A');
+    expect(markup).toContain('Sensor B');
+    expect(markup).toContain('Review');
+    expect(markup).toContain('Reject');
   });
 });

@@ -8,6 +8,7 @@ PostgreSQL schemas, migrations, seeds, and related documentation are stored here
 - Specification: `../docs/specifications/database-schema-v1.md`
 - Initial domain migration: `migrations/0001_initial_schema.sql`
 - Authentication session migration: `migrations/0002_auth_sessions.sql`
+- Datasheet worker lease migration: `migrations/0003_datasheet_job_leases.sql`
 
 The migration expects an empty database and runs transactionally. Canonical component and project JSON documents must pass their JSON Schema and semantic validators before database writes; SQL constraints provide an additional envelope-integrity layer.
 

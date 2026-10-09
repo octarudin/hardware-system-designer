@@ -227,6 +227,33 @@ export class PostgresComponentRepository implements ComponentRepository {
           [definition.component_id, definition.revision, datasheetId],
         );
       }
+      if (publication.sourceCandidateId) {
+        const candidate = await client.query(
+          `UPDATE component_candidates
+              SET status = 'PUBLISHED', published_component_id = $2, published_revision = $3
+            WHERE candidate_id = $1 AND status IN ('DETECTED', 'SELECTED')`,
+          [publication.sourceCandidateId, definition.component_id, definition.revision],
+        );
+        if (candidate.rowCount !== 1)
+          throw new ApplicationError(
+            409,
+            'DATASHEET_CANDIDATE_NOT_PUBLISHABLE',
+            'The datasheet candidate is no longer publishable.',
+          );
+        await client.query(
+          `UPDATE datasheet_import_jobs j
+              SET status = 'COMPLETED', completed_at = CURRENT_TIMESTAMP
+             FROM component_candidates changed
+            WHERE changed.candidate_id = $1 AND changed.import_id = j.import_id
+              AND j.status = 'REVIEW_REQUIRED'
+              AND NOT EXISTS (
+                SELECT 1 FROM component_candidates pending
+                 WHERE pending.import_id = j.import_id
+                   AND pending.status IN ('DETECTED', 'SELECTED')
+              )`,
+          [publication.sourceCandidateId],
+        );
+      }
       await client.query(
         `INSERT INTO component_review_actions (
            review_action_id, component_id, revision, actor_user_id, action, note
@@ -251,6 +278,9 @@ export class PostgresComponentRepository implements ComponentRepository {
             componentId: definition.component_id,
             revision: definition.revision,
             lifecycleStatus: definition.lifecycle.status,
+            ...(publication.sourceCandidateId
+              ? { sourceCandidateId: publication.sourceCandidateId }
+              : {}),
           }),
         ],
       );

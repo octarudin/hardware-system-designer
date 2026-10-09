@@ -55,6 +55,11 @@ try {
     created.document.document_revision,
     'Project persistence smoke renamed',
   );
+  const checked = await service.runDesignCheck(
+    principal,
+    created.document.project_id,
+    renamed.document.document_revision,
+  );
   let conflictCode;
   try {
     await service.save(principal, created.document.project_id, 1, created.document);
@@ -72,23 +77,28 @@ try {
     `SELECT
        (SELECT count(*)::integer FROM projects) AS project_count,
        (SELECT count(*)::integer FROM projects WHERE deleted_at IS NULL) AS active_count,
-       (SELECT count(*)::integer FROM audit_events) AS audit_count`,
+       (SELECT count(*)::integer FROM audit_events) AS audit_count,
+       (SELECT count(*)::integer FROM design_check_runs) AS design_check_count`,
   );
   const state = persisted.rows[0];
   if (
     renamed.document.document_revision !== 2 ||
     renamed.document.engineering_revision !== 1 ||
+    checked.document.document_revision !== 3 ||
+    checked.document.engineering_revision !== 1 ||
+    checked.document.last_design_check?.evaluated_engineering_revision !== 1 ||
     conflictCode !== 'PROJECT_SAVE_CONFLICT' ||
     imported.document.project_id === created.document.project_id ||
     state?.project_count !== 2 ||
     state?.active_count !== 1 ||
-    state?.audit_count !== 4
+    state?.audit_count !== 6 ||
+    state?.design_check_count !== 1
   ) {
     throw new Error(`Project persistence assertions failed: ${JSON.stringify(state)}`);
   }
 
   console.info(
-    'Project smoke test passed: CAS conflict, export/import Create Copy, audit, and soft delete are correct.',
+    'Project smoke test passed: CAS conflict, Design Check history, export/import Create Copy, audit, and soft delete are correct.',
   );
 } finally {
   if (pool) await pool.end();

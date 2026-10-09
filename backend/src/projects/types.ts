@@ -1,4 +1,9 @@
-import type { ProjectFileV1, ProjectSummary } from '@hwsd/shared';
+import type {
+  ComponentSchemaV1,
+  ConnectionRuleResultV1,
+  ProjectFileV1,
+  ProjectSummary,
+} from '@hwsd/shared';
 
 export interface StoredProject {
   readonly document: ProjectFileV1;
@@ -18,6 +23,11 @@ export interface ProjectRepository {
     ownerUserId: string,
     actorUserId: string,
     expectedRevision: number,
+    designCheck?: {
+      readonly id: string;
+      readonly result: ConnectionRuleResultV1;
+      readonly createdAt: string;
+    },
   ): Promise<StoredProject>;
   softDelete(projectId: string, ownerUserId: string, actorUserId: string): Promise<boolean>;
 }
@@ -27,4 +37,12 @@ export interface Clock {
 }
 export interface IdGenerator {
   projectId(): string;
+}
+
+export interface ComponentRevisionProvider {
+  getRevision(
+    componentId: string,
+    revision: number,
+  ): Promise<{ readonly definition: ComponentSchemaV1 } | null>;
+  getLatest(componentId: string): Promise<{ readonly definition: ComponentSchemaV1 } | null>;
 }

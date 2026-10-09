@@ -10,5 +10,6 @@ Current decisions:
 - `0004-postgresql-queue-and-s3-storage.md` — background-job and binary-storage infrastructure.
 - `0005-json-schema-source-of-truth.md` — schema-first contract ownership and validation.
 - `0006-session-threat-model.md` — concrete session expiry, cookie, CSRF, and throttling controls.
+- `0007-editor-performance-envelope.md` — supported V1 project size and editor latency budgets.
 
 Statuses are `PROPOSED`, `ACCEPTED`, `SUPERSEDED`, or `REJECTED`.

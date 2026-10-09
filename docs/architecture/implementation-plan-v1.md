@@ -494,7 +494,7 @@ A work package is done only when:
 |---|---|---|---|
 | `D0` Toolchain compatibility | End of `M0-02` | exact Node, pnpm, TypeScript, Vite, React, Fastify, Ajv, and test versions proven together | all feature code |
 | `D1` Session threat model | Before `M2-01` | cookie policy, expiry, revocation, CSRF strategy, login rate limits | authentication |
-| `D2` Editor performance envelope | Before `M6-01` | supported project-size fixture and interaction/rule latency budgets | editor architecture |
+| `D2` Editor performance envelope | Closed by ADR 0007 | supported project-size fixture and interaction/rule latency budgets | editor architecture |
 | `D3` AI provider/model | Before `M7-04` | data handling, regional/privacy constraints, structured-output capability, cost/latency ceiling, evaluation score | live AI integration |
 | `D4` Production hosting | Before `M8-04` | runtime, database, object storage, secrets, backup, ingress/TLS, monitoring ownership | release |
 

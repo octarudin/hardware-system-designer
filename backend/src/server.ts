@@ -21,8 +21,14 @@ if (!databaseUrl) throw new Error('DATABASE_URL is required.');
 
 const pool = new Pool({ connectionString: databaseUrl });
 const authService = new AuthService(new PostgresAuthRepository(pool), new Argon2PasswordVerifier());
-const componentService = new ComponentService(new PostgresComponentRepository(pool));
-const projectService = new ProjectService(new PostgresProjectRepository(pool));
+const componentRepository = new PostgresComponentRepository(pool);
+const componentService = new ComponentService(componentRepository);
+const projectService = new ProjectService(
+  new PostgresProjectRepository(pool),
+  undefined,
+  undefined,
+  componentRepository,
+);
 const app = buildApp({ authService, componentService, projectService, logger: true });
 app.addHook('onClose', async () => pool.end());
 

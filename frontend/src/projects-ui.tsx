@@ -10,6 +10,7 @@ import {
 
 import { ApiError } from './auth-api.js';
 import { bytesToBase64, downloadText, projectApi } from './project-api.js';
+import { EngineeringEditor } from './engineering-editor.js';
 
 function projectKey(projectId: string) {
   return ['project', projectId] as const;
@@ -415,73 +416,18 @@ export function ProjectEditor({
           Export
         </button>
       </div>
-      <div className="editor-placeholder">
-        <section>
-          <p className="eyebrow">Persistent editor shell</p>
-          <h1>{document.metadata.name}</h1>
-          <p className="lede">
-            Canvas editing arrives in M6. M4 preserves the complete canonical document, revision
-            rules, autosave, and recovery.
-          </p>
-          <dl>
-            <div>
-              <dt>Document revision</dt>
-              <dd>{document.document_revision}</dd>
-            </div>
-            <div>
-              <dt>Engineering revision</dt>
-              <dd>{document.engineering_revision}</dd>
-            </div>
-            <div>
-              <dt>Components</dt>
-              <dd>{document.component_instances.length}</dd>
-            </div>
-            <div>
-              <dt>Connections</dt>
-              <dd>{document.connections.length}</dd>
-            </div>
-          </dl>
-        </section>
-        <aside className="settings-panel">
-          <h2>Project settings</h2>
-          <label>
-            Description
-            <textarea
-              value={document.metadata.description ?? ''}
-              onChange={(event) =>
-                edit(
-                  (current) =>
-                    ({
-                      ...current,
-                      metadata: {
-                        ...current.metadata,
-                        ...(event.target.value
-                          ? { description: event.target.value }
-                          : { description: undefined }),
-                      },
-                    }) as ProjectFileV1,
-                )
-              }
-            />
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={document.settings.autosave.enabled}
-              onChange={(event) =>
-                edit((current) => ({
-                  ...current,
-                  settings: {
-                    autosave: { ...current.settings.autosave, enabled: event.target.checked },
-                  },
-                }))
-              }
-            />{' '}
-            Enable autosave
-          </label>
-          <p>Idle interval: {document.settings.autosave.interval_ms / 1000} seconds</p>
-        </aside>
-      </div>
+      <EngineeringEditor
+        document={document}
+        disabled={saveState !== 'Saved'}
+        onEdit={(next) => edit(() => next)}
+        onServerDocument={(next) => {
+          setDocument(next);
+          setSaveState('Saved');
+          localStorage.removeItem(recoveryKey(projectId));
+          queryClient.setQueryData(projectKey(projectId), { document: next, saved: true });
+          void queryClient.invalidateQueries({ queryKey: ['projects'] });
+        }}
+      />
       {recovery ? (
         <section className="inline-dialog" role="dialog">
           <h2>Browser recovery copy found</h2>

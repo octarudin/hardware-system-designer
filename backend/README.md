@@ -36,6 +36,10 @@ Create Copy import now runs the M5 full Design Check after structural and semant
 Engineering-incomplete projects may retain `COMP-001` findings, while forbidden persisted
 connections, electrical conflicts, allocation conflicts, and invalid buses fail closed.
 
+M6 project commands add immutable component snapshots, connection preview and atomic commit,
+server-side warning revalidation, allocation persistence, transactional Design Check history, and
+explicit component revision replacement with impact evaluation.
+
 Every response includes `x-request-id`. HTTP failures use the shared error envelope with a stable code, message, request ID, and details array.
 
 Run from the repository root with `corepack pnpm --filter @hwsd/backend dev`.

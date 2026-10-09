@@ -2,9 +2,15 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 
 import {
   API_VERSION,
+  type AddProjectComponentRequest,
+  type ApplyComponentUpdateRequest,
+  type CommitConnectionRequest,
   type CreateProjectRequest,
   type ImportProjectRequest,
   type RenameProjectRequest,
+  type PreviewComponentUpdateRequest,
+  type PreviewConnectionRequest,
+  type RunDesignCheckRequest,
   type SaveProjectRequest,
 } from '@hwsd/shared';
 
@@ -23,6 +29,16 @@ const projectParams = {
   required: ['projectId'],
   properties: { projectId: { type: 'string', pattern: '^PROJ-[A-Z0-9][A-Z0-9_-]*$' } },
 } as const;
+const instanceParams = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['projectId', 'instanceId'],
+  properties: {
+    projectId: { type: 'string', pattern: '^PROJ-[A-Z0-9][A-Z0-9_-]*$' },
+    instanceId: { type: 'string', pattern: '^INST-[A-Z0-9][A-Z0-9_-]*$' },
+  },
+} as const;
+const expectedRevision = { type: 'integer', minimum: 1 } as const;
 
 export function registerProjectRoutes(
   app: FastifyInstance,
@@ -145,6 +161,219 @@ export function registerProjectRoutes(
         request.params.projectId,
         request.body.expectedDocumentRevision,
         request.body.document,
+      ),
+  );
+
+  app.post<{ Params: { projectId: string }; Body: AddProjectComponentRequest }>(
+    `/api/${API_VERSION}/projects/:projectId/components`,
+    {
+      schema: {
+        operationId: 'addProjectComponent',
+        tags: ['projects'],
+        params: projectParams,
+        body: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['expectedDocumentRevision', 'componentId', 'revision', 'layout'],
+          properties: {
+            expectedDocumentRevision: expectedRevision,
+            componentId: { type: 'string', minLength: 1 },
+            revision: { type: 'integer', minimum: 1 },
+            layout: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['x', 'y'],
+              properties: { x: { type: 'number' }, y: { type: 'number' } },
+            },
+          },
+        },
+      },
+      preHandler: requireCsrf,
+    },
+    async (request, reply) => {
+      const result = await dependencies().service.addComponent(
+        await authenticate(request),
+        request.params.projectId,
+        request.body.expectedDocumentRevision,
+        request.body.componentId,
+        request.body.revision,
+        request.body.layout,
+      );
+      void reply.status(201);
+      return result;
+    },
+  );
+
+  app.post<{ Params: { projectId: string }; Body: PreviewConnectionRequest }>(
+    `/api/${API_VERSION}/projects/:projectId/connections/preview`,
+    {
+      schema: {
+        operationId: 'previewProjectConnection',
+        tags: ['projects'],
+        params: projectParams,
+        body: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['expectedDocumentRevision', 'connection'],
+          properties: {
+            expectedDocumentRevision: expectedRevision,
+            connection: { type: 'object' },
+          },
+        },
+      },
+      preHandler: requireCsrf,
+    },
+    async (request) =>
+      dependencies().service.previewConnection(
+        await authenticate(request),
+        request.params.projectId,
+        request.body.expectedDocumentRevision,
+        request.body.connection,
+      ),
+  );
+
+  app.post<{ Params: { projectId: string }; Body: CommitConnectionRequest }>(
+    `/api/${API_VERSION}/projects/:projectId/connections/commit`,
+    {
+      schema: {
+        operationId: 'commitProjectConnection',
+        tags: ['projects'],
+        params: projectParams,
+        body: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['expectedDocumentRevision', 'connection'],
+          properties: {
+            expectedDocumentRevision: expectedRevision,
+            connection: { type: 'object' },
+            confirmedWarnings: {
+              type: 'array',
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['fingerprint'],
+                properties: {
+                  fingerprint: { type: 'string', minLength: 1 },
+                  note: { type: 'string', minLength: 1 },
+                },
+              },
+            },
+          },
+        },
+      },
+      preHandler: requireCsrf,
+    },
+    async (request) =>
+      dependencies().service.commitConnection(
+        await authenticate(request),
+        request.params.projectId,
+        request.body.expectedDocumentRevision,
+        request.body.connection,
+        request.body.confirmedWarnings,
+      ),
+  );
+
+  app.post<{ Params: { projectId: string }; Body: RunDesignCheckRequest }>(
+    `/api/${API_VERSION}/projects/:projectId/design-checks`,
+    {
+      schema: {
+        operationId: 'runProjectDesignCheck',
+        tags: ['projects'],
+        params: projectParams,
+        body: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['expectedDocumentRevision'],
+          properties: { expectedDocumentRevision: expectedRevision },
+        },
+      },
+      preHandler: requireCsrf,
+    },
+    async (request, reply) => {
+      const result = await dependencies().service.runDesignCheck(
+        await authenticate(request),
+        request.params.projectId,
+        request.body.expectedDocumentRevision,
+      );
+      void reply.status(201);
+      return result;
+    },
+  );
+
+  app.post<{
+    Params: { projectId: string; instanceId: string };
+    Body: PreviewComponentUpdateRequest;
+  }>(
+    `/api/${API_VERSION}/projects/:projectId/components/:instanceId/update-preview`,
+    {
+      schema: {
+        operationId: 'previewProjectComponentUpdate',
+        tags: ['projects'],
+        params: instanceParams,
+        body: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['expectedDocumentRevision'],
+          properties: {
+            expectedDocumentRevision: expectedRevision,
+            targetRevision: { type: 'integer', minimum: 1 },
+          },
+        },
+      },
+      preHandler: requireCsrf,
+    },
+    async (request) =>
+      dependencies().service.previewComponentUpdate(
+        await authenticate(request),
+        request.params.projectId,
+        request.params.instanceId,
+        request.body.expectedDocumentRevision,
+        request.body.targetRevision,
+      ),
+  );
+
+  app.post<{
+    Params: { projectId: string; instanceId: string };
+    Body: ApplyComponentUpdateRequest;
+  }>(
+    `/api/${API_VERSION}/projects/:projectId/components/:instanceId/apply-update`,
+    {
+      schema: {
+        operationId: 'applyProjectComponentUpdate',
+        tags: ['projects'],
+        params: instanceParams,
+        body: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['expectedDocumentRevision'],
+          properties: {
+            expectedDocumentRevision: expectedRevision,
+            targetRevision: { type: 'integer', minimum: 1 },
+            confirmedWarnings: {
+              type: 'array',
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['fingerprint'],
+                properties: {
+                  fingerprint: { type: 'string', minLength: 1 },
+                  note: { type: 'string', minLength: 1 },
+                },
+              },
+            },
+          },
+        },
+      },
+      preHandler: requireCsrf,
+    },
+    async (request) =>
+      dependencies().service.applyComponentUpdate(
+        await authenticate(request),
+        request.params.projectId,
+        request.params.instanceId,
+        request.body.expectedDocumentRevision,
+        request.body.targetRevision,
+        request.body.confirmedWarnings,
       ),
   );
 

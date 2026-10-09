@@ -4,9 +4,10 @@ Web-based engineering tool for designing hardware system block diagrams with dat
 
 ## Current Status
 
-M5 deterministic connection and engineering Rule Engine. The pure shared engine implements the 38
-required V1 structural, interface, electrical, allocation, bus, power, completeness, and lifecycle
-rules across preview, commit, and full Design Check modes.
+M6 engineering editor and connection vertical slice. The application now combines immutable
+component snapshots, command-based canvas editing, deterministic connection preview/commit,
+allocation persistence, warning confirmation, Design Check history, and explicit component update
+impact review.
 
 ## Prerequisites
 
@@ -48,8 +49,8 @@ To exercise the complete M3 publication transaction against an isolated PostgreS
 corepack pnpm db:component:smoke
 ```
 
-To verify the M4 compare-and-swap, export/Create Copy import, audit, and soft-delete flow against
-PostgreSQL, run:
+To verify project compare-and-swap, Design Check history, export/Create Copy import, audit, and
+soft-delete behavior against PostgreSQL, run:
 
 ```text
 corepack pnpm db:project:smoke

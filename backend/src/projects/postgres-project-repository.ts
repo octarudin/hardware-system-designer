@@ -1,5 +1,5 @@
 import type { Pool, PoolClient } from 'pg';
-import type { ProjectFileV1, ProjectSummary } from '@hwsd/shared';
+import type { ConnectionRuleResultV1, ProjectFileV1, ProjectSummary } from '@hwsd/shared';
 
 import type { ProjectRepository, StoredProject } from './types.js';
 
@@ -24,14 +24,15 @@ function stored(row: ProjectRow): StoredProject {
 async function audit(
   client: PoolClient,
   actor: string,
-  projectId: string,
+  entityId: string,
   action: string,
   metadata: unknown = {},
+  entityType: 'PROJECT' | 'DESIGN_CHECK' = 'PROJECT',
 ) {
   await client.query(
     `INSERT INTO audit_events (actor_user_id, entity_type, entity_id, action, metadata)
-     VALUES ($1, 'PROJECT', $2, $3, $4::jsonb)`,
-    [actor, projectId, action, JSON.stringify(metadata)],
+     VALUES ($1, $2, $3, $4, $5::jsonb)`,
+    [actor, entityType, entityId, action, JSON.stringify(metadata)],
   );
 }
 
@@ -126,6 +127,11 @@ export class PostgresProjectRepository implements ProjectRepository {
     ownerUserId: string,
     actorUserId: string,
     expectedRevision: number,
+    designCheck?: {
+      readonly id: string;
+      readonly result: ConnectionRuleResultV1;
+      readonly createdAt: string;
+    },
   ) {
     const client = await this.pool.connect();
     try {
@@ -138,6 +144,36 @@ export class PostgresProjectRepository implements ProjectRepository {
         documentRevision: document.document_revision,
         engineeringRevision: document.engineering_revision,
       });
+      if (designCheck) {
+        await client.query(
+          `INSERT INTO design_check_runs (
+             design_check_id, project_id, document_revision, engineering_revision,
+             ruleset_version, result, initiated_by, created_at
+           ) VALUES ($1,$2,$3,$4,$5,$6::jsonb,$7,$8)`,
+          [
+            designCheck.id,
+            document.project_id,
+            document.document_revision,
+            document.engineering_revision,
+            designCheck.result.ruleset_version,
+            JSON.stringify(designCheck.result),
+            actorUserId,
+            designCheck.createdAt,
+          ],
+        );
+        await audit(
+          client,
+          actorUserId,
+          designCheck.id,
+          'DESIGN_CHECK_COMPLETED',
+          {
+            projectId: document.project_id,
+            verdict: designCheck.result.verdict,
+            engineeringRevision: document.engineering_revision,
+          },
+          'DESIGN_CHECK',
+        );
+      }
       await client.query('COMMIT');
       return stored(result.rows[0]!);
     } catch (error) {

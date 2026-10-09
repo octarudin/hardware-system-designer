@@ -1,4 +1,10 @@
 import type {
+  AddProjectComponentRequest,
+  ApplyComponentUpdateRequest,
+  CommitConnectionRequest,
+  ComponentUpdatePreviewResponse,
+  ConnectionCommitResponse,
+  ConnectionEvaluationResponse,
   CreateProjectRequest,
   DeleteProjectResponse,
   ImportProjectRequest,
@@ -6,8 +12,11 @@ import type {
   ProjectFileV1,
   ProjectListResponse,
   ProjectResponse,
+  PreviewComponentUpdateRequest,
+  PreviewConnectionRequest,
   RenameProjectRequest,
   SaveProjectRequest,
+  DesignCheckResponse,
 } from '@hwsd/shared';
 
 import { apiRequest } from './auth-api.js';
@@ -33,6 +42,44 @@ export const projectApi = {
   export: (projectId: string) => apiRequest<ProjectExportResponse>(`/projects/${projectId}/export`),
   importCopy: (request: ImportProjectRequest) =>
     apiRequest<ProjectResponse>('/projects/import', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    }),
+  addComponent: (projectId: string, request: AddProjectComponentRequest) =>
+    apiRequest<ProjectResponse>(`/projects/${projectId}/components`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    }),
+  previewConnection: (projectId: string, request: PreviewConnectionRequest) =>
+    apiRequest<ConnectionEvaluationResponse>(`/projects/${projectId}/connections/preview`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    }),
+  commitConnection: (projectId: string, request: CommitConnectionRequest) =>
+    apiRequest<ConnectionCommitResponse>(`/projects/${projectId}/connections/commit`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    }),
+  runDesignCheck: (projectId: string, expectedDocumentRevision: number) =>
+    apiRequest<DesignCheckResponse>(`/projects/${projectId}/design-checks`, {
+      method: 'POST',
+      body: JSON.stringify({ expectedDocumentRevision }),
+    }),
+  previewComponentUpdate: (
+    projectId: string,
+    instanceId: string,
+    request: PreviewComponentUpdateRequest,
+  ) =>
+    apiRequest<ComponentUpdatePreviewResponse>(
+      `/projects/${projectId}/components/${instanceId}/update-preview`,
+      { method: 'POST', body: JSON.stringify(request) },
+    ),
+  applyComponentUpdate: (
+    projectId: string,
+    instanceId: string,
+    request: ApplyComponentUpdateRequest,
+  ) =>
+    apiRequest<ProjectResponse>(`/projects/${projectId}/components/${instanceId}/apply-update`, {
       method: 'POST',
       body: JSON.stringify(request),
     }),
